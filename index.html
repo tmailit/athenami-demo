@@ -839,13 +839,17 @@
                 Interested investors and potential strategic partners can receive
                 <span class="font-semibold text-slate-900">a short memo, demo link, and data-room preview</span>.
               </p>
+
               <div class="flex flex-wrap items-center gap-2 pt-1">
-                <a
-                  href="mailto:travhook@gmail.com?subject=AthenaMI%20investor%20preview"
+                <!-- Tier-1 verify button (opens modal first, THEN triggers mailto after confirm) -->
+                <button
+                  id="openTier1InvestorModal"
+                  type="button"
                   class="inline-flex items-center justify-center rounded-full bg-slate-900 px-4 py-2 text-[11px] font-semibold text-white shadow-sm hover:bg-slate-800"
                 >
                   Request investor preview
-                </a>
+                </button>
+
                 <button
                   id="openQuickstartBtn2"
                   type="button"
@@ -854,11 +858,54 @@
                   Open VEI Quickstart
                 </button>
               </div>
+
+              <!-- (Hidden) original mailto template — used after Tier-1 confirm -->
+              <a
+                id="investorMailtoLink"
+                class="hidden"
+                href="mailto:travhook@gmail.com?subject=AthenaMI%20Investor%20Preview&body=Hi%20Travis%2C%0D%0A%0D%0AI%E2%80%99d%20love%20to%20learn%20more%20about%20AthenaMI.%20Happy%20to%20review%20a%20short%20memo%20or%20schedule%20a%20walkthrough.%0D%0A%0D%0ABest%2C%0D%0A"
+              >email</a>
             </div>
           </div>
         </section>
       </div>
     </main>
+
+    <!-- Tier 1 Verification Modal (Investor Preview) -->
+    <div
+      id="tier1InvestorModal"
+      class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 backdrop-blur-sm"
+      aria-hidden="true"
+    >
+      <div class="w-full max-w-sm rounded-2xl bg-white p-5 shadow-xl space-y-3">
+        <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+          Tier 1 · Human verify
+        </p>
+        <h3 class="text-sm font-semibold text-slate-900">
+          Quick check before opening your email
+        </h3>
+        <p class="text-[13px] text-slate-600">
+          This helps distinguish real interest from automated traffic.
+        </p>
+
+        <div class="flex gap-2 pt-2">
+          <button
+            id="confirmTier1Investor"
+            type="button"
+            class="flex-1 rounded-full bg-emerald-600 px-4 py-2 text-[12px] font-semibold text-white hover:bg-emerald-700"
+          >
+            Yes, I’m here
+          </button>
+          <button
+            id="cancelTier1Investor"
+            type="button"
+            class="flex-1 rounded-full border border-slate-300 px-4 py-2 text-[12px] font-semibold text-slate-700 hover:bg-slate-100"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
 
     <!-- Footer -->
     <footer class="border-t border-slate-200 bg-white mt-8">
@@ -872,6 +919,51 @@
       </div>
     </footer>
   </div>
+
+  <!-- Tier-1 Modal Script -->
+  <script>
+    (function () {
+      const openBtn = document.getElementById("openTier1InvestorModal");
+      const modal = document.getElementById("tier1InvestorModal");
+      const confirmBtn = document.getElementById("confirmTier1Investor");
+      const cancelBtn = document.getElementById("cancelTier1Investor");
+      const mailto = document.getElementById("investorMailtoLink");
+
+      if (!openBtn || !modal || !confirmBtn || !cancelBtn || !mailto) return;
+
+      function openModal() {
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+        modal.setAttribute("aria-hidden", "false");
+      }
+
+      function closeModal() {
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+        modal.setAttribute("aria-hidden", "true");
+      }
+
+      openBtn.addEventListener("click", openModal);
+      cancelBtn.addEventListener("click", closeModal);
+
+      // Click outside to close
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) closeModal();
+      });
+
+      // ESC to close
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && !modal.classList.contains("hidden")) closeModal();
+      });
+
+      confirmBtn.addEventListener("click", () => {
+        closeModal();
+        // Trigger email after Tier-1 confirm
+        window.location.href = mailto.getAttribute("href");
+      });
+    })();
+  </script>
+
 
   <!-- Quickstart Modal -->
   <div id="quickstartOverlay" class="fixed inset-0 z-[999] hidden">
