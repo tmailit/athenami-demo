@@ -1,0 +1,1184 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>AthenaMI · Messaging Intelligence for Verified Engagement</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-900">
+  <!-- Page wrapper -->
+  <div class="min-h-screen flex flex-col">
+
+    <!-- Top nav / brand -->
+    <header class="border-b border-slate-200 bg-white/90 backdrop-blur">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <!-- Athena Owl Mark -->
+          <div class="h-9 w-9 rounded-2xl bg-slate-900 flex items-center justify-center relative overflow-hidden">
+            <!-- Simple "owl" face using circles -->
+            <div class="flex gap-0.5">
+              <div class="h-3 w-3 rounded-full bg-slate-100 relative">
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <div class="h-1.5 w-1.5 rounded-full bg-amber-400"></div>
+                </div>
+              </div>
+              <div class="h-3 w-3 rounded-full bg-slate-100 relative">
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <div class="h-1.5 w-1.5 rounded-full bg-amber-400"></div>
+                </div>
+              </div>
+            </div>
+            <div class="absolute bottom-1 left-1/2 -translate-x-1/2 h-1 w-4 rounded-full bg-slate-700/80"></div>
+          </div>
+          <div>
+            <div class="text-sm font-semibold tracking-tight">
+              AthenaMI<span class="text-slate-400 text-xs align-top ml-0.5">™</span>
+            </div>
+            <div class="text-[11px] text-slate-500">
+              Messaging Intelligence for Verified Engagement
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button
+            id="openQuickstartBtn"
+            type="button"
+            class="hidden sm:inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-semibold text-slate-700 hover:bg-slate-50"
+          >
+            <span class="h-1.5 w-1.5 rounded-full bg-sky-500"></span>
+            VEI Quickstart
+          </button>
+
+          <span class="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-medium text-slate-700">
+            <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+            Powered by VeriTechIQ&nbsp;VEI
+          </span>
+          <span class="hidden sm:inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-[11px] font-medium text-amber-800">
+            <span class="h-1.5 w-1.5 rounded-full bg-amber-400"></span>
+            Provisional patent submitted
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main content -->
+    <main class="flex-1">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 space-y-14">
+
+        <!-- HERO -->
+        <section class="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] items-center">
+          <!-- Left: copy -->
+          <div class="space-y-4">
+            <h1 class="text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900">
+              AthenaMI turns raw campaign noise into
+              <span class="text-emerald-600">decision-grade engagement intelligence</span>.
+            </h1>
+
+            <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
+              Instead of guessing from opens and clicks, AthenaMI adds a
+              <span class="font-medium text-slate-900">Verified Engagement Intelligence layer above your existing CRM/ESP</span>,
+              using a tiered verification model, I-O psychology, and reward-backed feedback to tell you
+              <span class="font-semibold text-slate-800">who is truly engaged, why, and what to do next</span> —
+              across any CRM or ESP you already use.
+            </p>
+
+            <div class="grid gap-3 sm:grid-cols-2 text-sm">
+              <div class="flex items-start gap-2">
+                <div class="mt-0.5 h-5 w-5 rounded-full bg-emerald-50 flex items-center justify-center">
+                  <span class="text-[11px] text-emerald-700 font-semibold">VEI</span>
+                </div>
+                <p class="text-slate-600">
+                  <span class="font-medium text-slate-900">VEI (Verified Engagement Index)</span> compresses behavior,
+                  psychology, and response quality into a single 1–7 score per campaign or segment.
+                </p>
+              </div>
+              <div class="flex items-start gap-2">
+                <div class="mt-0.5 h-5 w-5 rounded-full bg-sky-50 flex items-center justify-center">
+                  <span class="text-[11px] text-sky-700 font-semibold">3+1</span>
+                </div>
+                <p class="text-slate-600">
+                  The <span class="font-medium text-slate-900">3+1 framework</span> measures
+                  <span class="font-medium">Trust, Relevance, Advocacy, and an industry-specific ROI-Intent</span> —
+                  using pre-built question sets by sector (SaaS, retail, financial services, media, etc.) so teams
+                  get relevance and scientific rigor from day one.
+                </p>
+              </div>
+            </div>
+
+            <!-- Updated CTA block -->
+            <div class="flex flex-col gap-3 pt-2">
+              <!-- Primary CTAs -->
+              <div class="flex flex-wrap items-center gap-3">
+                <a
+                  id="veiDashboardCta"
+                  href="vei_v2_demo.html"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center justify-center rounded-full bg-slate-900 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-slate-800"
+                >
+                  View VEI dashboard
+                </a>
+                <a
+                  href="athenami_deck.html"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center justify-center rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-100"
+                >
+                  View AthenaMI deck
+                </a>
+              </div>
+
+              <!-- Feature chips -->
+              <div class="flex flex-wrap gap-2 text-[11px] text-slate-500">
+                <span class="inline-flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1">
+                  <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                  Reliability engine (Cronbach's α)
+                </span>
+                <span class="inline-flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1">
+                  <span class="h-1.5 w-1.5 rounded-full bg-sky-500"></span>
+                  Tier-1/2/3 verified engagement funnel
+                </span>
+                <span class="inline-flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1">
+                  <span class="h-1.5 w-1.5 rounded-full bg-purple-500"></span>
+                  Predictive + ROI Simulation
+                </span>
+              </div>
+
+              <p class="text-[11px] text-slate-500 leading-relaxed">
+                Note: the live demo uses realistic-but-synthetic org examples to showcase the engines and UI flow.
+                The logic works; the displayed org data is directional for investor walkthrough.
+              </p>
+            </div>
+          </div>
+
+          <!-- Right: VEI sample card -->
+          <div class="relative">
+            <div class="absolute inset-0 -translate-x-4 -translate-y-3 rounded-3xl bg-gradient-to-tr from-emerald-100 via-sky-100 to-amber-100 blur-2xl opacity-70"></div>
+            <div class="relative rounded-3xl bg-white shadow-xl shadow-slate-300/40 border border-slate-100 px-5 py-5 space-y-4">
+              <div class="flex items-center justify-between gap-3">
+                <div>
+                  <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                    Sample VEI snapshot
+                  </p>
+                  <p class="text-sm text-slate-900">
+                    DemoCo · Lifecycle nurture · Last 30 days
+                  </p>
+                </div>
+                <div class="rounded-full bg-slate-900 text-white px-3 py-1 text-[11px] font-semibold flex items-center gap-1.5">
+                  <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+                  Verified 94% confidence
+                </div>
+              </div>
+
+              <div class="grid grid-cols-4 gap-3 mt-2">
+                <div class="space-y-1">
+                  <p class="text-[11px] text-slate-500">VEI</p>
+                  <p class="text-2xl font-semibold text-slate-900">5.8</p>
+                  <p class="text-[11px] text-emerald-600">High engagement</p>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-[11px] text-slate-500">Trust</p>
+                  <p class="text-xl font-semibold text-slate-900">6.1</p>
+                  <div class="h-1.5 rounded-full bg-emerald-100 overflow-hidden">
+                    <div class="h-full w-[88%] bg-emerald-500"></div>
+                  </div>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-[11px] text-slate-500">Relevance</p>
+                  <p class="text-xl font-semibold text-slate-900">5.6</p>
+                  <div class="h-1.5 rounded-full bg-sky-100 overflow-hidden">
+                    <div class="h-full w-[80%] bg-sky-500"></div>
+                  </div>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-[11px] text-slate-500">Advocacy</p>
+                  <p class="text-xl font-semibold text-slate-900">5.4</p>
+                  <div class="h-1.5 rounded-full bg-amber-100 overflow-hidden">
+                    <div class="h-full w-[76%] bg-amber-500"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="rounded-2xl border border-slate-100 bg-slate-50 px-3 py-2.5 text-[11px] text-slate-600 space-y-1.5">
+                <p class="font-semibold text-slate-800">
+                  Primary driver: <span class="text-emerald-700">Trust in offer framing</span>
+                </p>
+                <p>
+                  Reliability gate: <span class="font-medium text-emerald-700">Green (α ≥ .70, n ≥ 400)</span>.
+                  Recommended move: keep core promise, tighten clarity + CTA before adding more spend.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- WHY THIS MATTERS NOW -->
+        <section id="why-now" class="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] items-start">
+          <!-- Left: narrative + pains -->
+          <div class="space-y-4">
+            <div class="space-y-2">
+              <p class="text-[11px] font-semibold tracking-wide uppercase text-slate-500">
+                Why this matters now
+              </p>
+              <h2 class="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900">
+                Marketing teams are spending heavily on tools — but still making
+                <span class="text-rose-600">judgment calls on weak signals</span>.
+              </h2>
+              <p class="text-sm text-slate-600">
+                Orchestration platforms were never designed to answer the question:
+                <span class="font-medium text-slate-900">"Is this campaign psychologically working?"</span>
+              </p>
+              <p class="text-sm text-slate-600">
+                Teams are stuck choosing between <span class="font-medium">operational systems</span> that track behavior
+                and <span class="font-medium">episodic research</span> that captures interpretation —
+                AthenaMI supplies the <span class="font-medium">continuous psychological layer</span> in between.
+              </p>
+            </div>
+
+            <!-- Three compact “pain” tiles -->
+            <div class="grid gap-3 sm:grid-cols-3 text-[12px]">
+              <div class="rounded-2xl border border-slate-200 bg-white px-3 py-3 space-y-1">
+                <p class="font-semibold text-slate-900">Shallow metrics</p>
+                <p class="text-slate-600">
+                  Opens and clicks often reflect a small group of power users, not true audience sentiment.
+                </p>
+              </div>
+              <div class="rounded-2xl border border-slate-200 bg-white px-3 py-3 space-y-1">
+                <p class="font-semibold text-slate-900">Unverified insight</p>
+                <p class="text-slate-600">
+                  Dashboards don’t gate decisions on sample size or statistical reliability.
+                </p>
+              </div>
+              <div class="rounded-2xl border border-slate-200 bg-white px-3 py-3 space-y-1">
+                <p class="font-semibold text-slate-900">Boardroom risk</p>
+                <p class="text-slate-600">
+                  Leaders still have to defend big budget calls built on noisy, unverified signals.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: agnostic / ecosystem tile -->
+          <div class="rounded-2xl border border-slate-200 bg-white px-4 py-4 space-y-3 shadow-sm">
+            <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+              Built to be agnostic
+            </p>
+            <p class="text-sm text-slate-700">
+              AthenaMI plugs into the tools teams already live in.
+            </p>
+
+            <!-- 6 badges in a 3×2 grid -->
+            <div class="grid grid-cols-3 gap-2 text-[11px] text-slate-600">
+              <span class="inline-flex items-center justify-center gap-1 rounded-full bg-slate-100 px-3 py-1">
+                <span class="h-1.5 w-1.5 rounded-full bg-orange-500"></span>
+                HubSpot
+              </span>
+              <span class="inline-flex items-center justify-center gap-1 rounded-full bg-slate-100 px-3 py-1">
+                <span class="h-1.5 w-1.5 rounded-full bg-blue-500"></span>
+                Salesforce
+              </span>
+              <span class="inline-flex items-center justify-center gap-1 rounded-full bg-slate-100 px-3 py-1">
+                <span class="h-1.5 w-1.5 rounded-full bg-indigo-500"></span>
+                Braze
+              </span>
+              <span class="inline-flex items-center justify-center gap-1 rounded-full bg-slate-100 px-3 py-1">
+                <span class="h-1.5 w-1.5 rounded-full bg-violet-500"></span>
+                Iterable
+              </span>
+              <span class="inline-flex items-center justify-center gap-1 rounded-full bg-slate-100 px-3 py-1">
+                <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                Mailchimp
+              </span>
+              <span class="inline-flex items-center justify-center gap-1 rounded-full bg-slate-100 px-3 py-1">
+                <span class="h-1.5 w-1.5 rounded-full bg-teal-500"></span>
+                Klaviyo
+              </span>
+            </div>
+
+            <p class="text-[12px] text-slate-700 leading-relaxed">
+              <span class="font-medium text-slate-900">AthenaMI sits on top of these systems</span> as a Verified
+              Engagement Intelligence layer — converting behavior, micro-feedback, and Tier-3 surveys into
+              guidance that can actually be defended in a boardroom.
+            </p>
+            <p class="text-[11px] text-slate-500 leading-relaxed">
+              A future acquirer — CRM, ESP, or cloud provider — can drop VEI directly into their ecosystem
+              as a premium intelligence layer instead of rebuilding it from scratch.
+            </p>
+          </div>
+        </section>
+
+        <!-- BENTO GRID: WHAT MAKES ATHENAMI DIFFERENT -->
+        <section class="space-y-5">
+          <!-- Mini hero row -->
+          <div class="space-y-2">
+            <p class="text-[11px] font-semibold tracking-wide uppercase text-slate-500">
+              What makes AthenaMI different
+            </p>
+            <h2 class="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900">
+              I-O psychology, behavioral data, and wallet-backed incentives in
+              <span class="text-emerald-600">one verified engagement stack</span>.
+            </h2>
+            <p class="text-sm text-slate-600">
+              VEI doesn’t replace your CRM — it verifies the signals your stack is already generating and
+              turns them into decision-grade scores, patterns, and next-best moves.
+            </p>
+          </div>
+
+          <div class="grid gap-4 md:grid-cols-3 auto-rows-[minmax(0,1fr)]">
+            <!-- 1 -->
+            <article class="md:col-span-1 rounded-2xl border border-slate-200 bg-white p-4 flex flex-col gap-2">
+              <div class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-2 py-1 text-[11px] font-semibold text-emerald-800 w-max">
+                <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                Verified Engagement Index (VEI)
+              </div>
+              <h3 class="text-sm font-semibold text-slate-900">
+                One score that actually means something
+              </h3>
+              <p class="text-[13px] text-slate-600 leading-relaxed">
+                VEI blends Tier-1/2/3 signals into a 1–7 score per campaign, segment, or org —
+                only shown when the Reliability Engine says the data is decision-ready.
+              </p>
+            </article>
+
+            <!-- 2 -->
+            <article class="md:col-span-1 rounded-2xl border border-slate-200 bg-white p-4 flex flex-col gap-2">
+              <div class="inline-flex items-center gap-2 rounded-full bg-sky-50 px-2 py-1 text-[11px] font-semibold text-sky-800 w-max">
+                <span class="h-1.5 w-1.5 rounded-full bg-sky-500"></span>
+                I-O Psychology Backbone
+              </div>
+              <h3 class="text-sm font-semibold text-slate-900">
+                Trust, clarity, motivation, ROI-intent
+              </h3>
+              <p class="text-[13px] text-slate-600 leading-relaxed">
+                Internally, VEI models <span class="font-medium">trust, clarity, motivation, and ROI-intent</span>
+                using industrial-organizational psychology, with Cronbach's α and sample-size bands gating when the
+                system declares "ready for a real decision."
+              </p>
+            </article>
+
+            <!-- 3 -->
+            <article class="md:col-span-1 rounded-2xl border border-slate-200 bg-white p-4 flex flex-col gap-2">
+              <div class="inline-flex items-center gap-2 rounded-full bg-amber-50 px-2 py-1 text-[11px] font-semibold text-amber-800 w-max">
+                <span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
+                Tiered Engagement Funnel
+              </div>
+              <h3 class="text-sm font-semibold text-slate-900">
+                Human verify → explain → measure
+              </h3>
+              <p class="text-[13px] text-slate-600 leading-relaxed">
+                Tier-1 one-click verification, Tier-2 short open-text, and Tier-3 structured 3+1 surveys
+                verify engagement before teams crank up volume or spend.
+              </p>
+            </article>
+
+            <!-- 4 -->
+            <article class="md:col-span-2 rounded-2xl border border-slate-200 bg-white p-4 flex flex-col gap-2">
+              <div class="inline-flex items-center gap-2 rounded-full bg-slate-900 px-2 py-1 text-[11px] font-semibold text-slate-50 w-max">
+                <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+                Wallet + Reward Engine
+              </div>
+              <h3 class="text-sm font-semibold text-slate-900">
+                Incentives that are small, transparent, and measurable
+              </h3>
+              <p class="text-[13px] text-slate-600 leading-relaxed">
+                A built-in wallet funds Tier-1/2/3 responses with micro-rewards. Every dollar spent ties back
+                to VEI shifts and downstream KPIs, making it easier to defend budget and cut low-yield campaigns.
+              </p>
+              <p class="text-[11px] text-slate-500">
+                Default economics: clients fund rewards; AthenaMI earns a configurable platform fee
+                (e.g., ~10%) on top of distributed incentives.
+              </p>
+            </article>
+
+            <!-- 5 -->
+            <article class="md:col-span-1 rounded-2xl border border-slate-200 bg-white p-4 flex flex-col gap-2">
+              <div class="inline-flex items-center gap-2 rounded-full bg-purple-50 px-2 py-1 text-[11px] font-semibold text-purple-800 w-max">
+                <span class="h-1.5 w-1.5 rounded-full bg-purple-500"></span>
+                Simulation & "What-if" Engine
+              </div>
+              <h3 class="text-sm font-semibold text-slate-900">
+                Don’t just report — rehearse decisions
+              </h3>
+              <p class="text-[13px] text-slate-600 leading-relaxed">
+                Leaders can test reward levels, cadence, and message changes in simulation first,
+                using historical VEI and Tier-3 patterns as guardrails.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <!-- EMERGING MARKET STANDARD + REPORT PREVIEW CAROUSEL -->
+        <section class="space-y-5">
+          <div class="space-y-1">
+            <p class="text-[11px] font-semibold tracking-wide uppercase text-slate-500">
+              The emerging market standard
+            </p>
+            <h2 class="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900">
+              A <span class="text-emerald-600">new data layer</span> that becomes the benchmark for real human response.
+            </h2>
+            <p class="text-[11px] text-slate-500">
+              A data layer that doesn’t exist yet — but will.
+            </p>
+          </div>
+
+          <div class="grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1.1fr)] items-stretch">
+            <!-- Left: Report preview “PDF-style” card with carousel -->
+            <div class="relative">
+              <div class="rounded-3xl border border-slate-200 bg-slate-900/5 shadow-sm overflow-hidden h-full flex flex-col">
+                <!-- Top dark header strip -->
+                <div class="h-10 w-full bg-slate-900 flex items-center justify-between px-4">
+                  <div class="flex items-center gap-2">
+                    <!-- Mini owl mark -->
+                    <div class="h-7 w-7 rounded-xl bg-slate-800 flex items-center justify-center relative overflow-hidden">
+                      <div class="flex gap-0.5">
+                        <div class="h-2.5 w-2.5 rounded-full bg-slate-100 relative">
+                          <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="h-1 w-1 rounded-full bg-amber-400"></div>
+                          </div>
+                        </div>
+                        <div class="h-2.5 w-2.5 rounded-full bg-slate-100 relative">
+                          <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="h-1 w-1 rounded-full bg-amber-400"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <p class="text-[11px] font-semibold tracking-wide text-slate-100">
+                        VeriTechIQ™ Industry Report
+                      </p>
+                      <p class="text-[10px] text-slate-300">
+                        Verified Engagement Intelligence · Sample Edition
+                      </p>
+                    </div>
+                  </div>
+                  <span class="hidden sm:inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-3 py-1 text-[10px] font-medium text-emerald-200">
+                    Mock visuals for investor preview
+                  </span>
+                </div>
+
+                <div class="flex-1 flex">
+                  <!-- Faux page thumbnails like a PDF viewer -->
+                  <div class="hidden sm:flex flex-col items-center gap-1 px-1.5 pt-4 border-r border-slate-200 bg-slate-50 w-10">
+                    <div class="h-8 w-6 rounded-[6px] bg-slate-900/80 shadow-sm ring-1 ring-slate-900/40"></div>
+                    <div class="h-8 w-6 rounded-[6px] bg-slate-200"></div>
+                    <div class="h-8 w-6 rounded-[6px] bg-slate-200"></div>
+                  </div>
+
+                  <!-- “Page” body with slides -->
+                  <div class="flex-1 bg-white">
+                    <div id="reportSlides" class="flex-1 relative">
+                      <!-- Slide 1: Cover / hero -->
+                      <div class="report-slide h-full px-5 py-5 space-y-4" data-slide-index="0">
+                        <!-- Big color block header like a PDF cover -->
+                        <div class="rounded-2xl bg-gradient-to-r from-slate-900 via-emerald-600 to-sky-500 text-white px-5 py-4 space-y-2">
+                          <p class="text-[11px] uppercase tracking-[0.18em] text-emerald-200">
+                            State of Verified Engagement · 2025
+                          </p>
+                          <h3 class="text-lg sm:text-xl font-semibold">
+                            AthenaMI Verified Engagement Intelligence
+                          </h3>
+                          <p class="text-[12px] sm:text-[13px] text-emerald-50 max-w-md">
+                            Q1 Sample Industry Benchmark Report powered by the VeriTechIQ™
+                            Verified Engagement Index and 3+1 drivers.
+                          </p>
+                        </div>
+
+                        <div class="space-y-2 pt-3 text-[13px] text-slate-700 leading-relaxed">
+                          <p class="font-semibold text-slate-900">
+                            What this report covers
+                          </p>
+                          <p>
+                            Cross-industry VEI patterns and 3+1 driver trends for Retail, SaaS,
+                            Healthcare, and more — based entirely on verified, reward-backed human
+                            responses, not scraped web data.
+                          </p>
+                          <p class="text-slate-500 text-[11px] pt-1">
+                            Not a dashboard export — a board-ready narrative on how real people are
+                            receiving, trusting, and acting on messages.
+                          </p>
+                        </div>
+                      </div>
+
+                      <!-- Slide 2: Contents / VEI overview -->
+                      <div class="report-slide h-full px-5 py-5 space-y-3 hidden" data-slide-index="1">
+                        <div class="flex gap-4">
+                          <!-- Colored side bar -->
+                          <div class="hidden sm:block w-1 rounded-full bg-gradient-to-b from-emerald-500 via-sky-500 to-amber-400 mt-1"></div>
+                          <div class="space-y-2 flex-1">
+                            <p class="text-[11px] text-slate-500 uppercase tracking-wide">
+                              Slide 2 · Contents &amp; VEI overview
+                            </p>
+                            <h3 class="text-sm sm:text-base font-semibold text-slate-900">
+                              Sample VEI scores across key sectors
+                            </h3>
+                            <p class="text-[13px] text-slate-700 leading-relaxed">
+                              VEI is a 1–7 index that blends verified Tier-1/2/3 responses into a
+                              single score per segment — only shown when reliability bands clear
+                              green thresholds.
+                            </p>
+
+                            <div class="grid gap-2 pt-1 text-[12px]">
+                              <div>
+                                <div class="flex items-center justify-between">
+                                  <span class="text-slate-700">Retail</span>
+                                  <span class="font-semibold text-slate-900">5.4</span>
+                                </div>
+                                <div class="h-1.5 rounded-full bg-slate-100 overflow-hidden">
+                                  <div class="h-full w-[72%] bg-emerald-500"></div>
+                                </div>
+                              </div>
+                              <div>
+                                <div class="flex items-center justify-between">
+                                  <span class="text-slate-700">Healthcare</span>
+                                  <span class="font-semibold text-slate-900">6.1</span>
+                                </div>
+                                <div class="h-1.5 rounded-full bg-slate-100 overflow-hidden">
+                                  <div class="h-full w-[86%] bg-emerald-600"></div>
+                                </div>
+                              </div>
+                              <div>
+                                <div class="flex items-center justify-between">
+                                  <span class="text-slate-700">SaaS</span>
+                                  <span class="font-semibold text-slate-900">5.8</span>
+                                </div>
+                                <div class="h-1.5 rounded-full bg-slate-100 overflow-hidden">
+                                  <div class="h-full w-[80%] bg-emerald-500"></div>
+                                </div>
+                              </div>
+                              <div>
+                                <div class="flex items-center justify-between">
+                                  <span class="text-slate-700">Education</span>
+                                  <span class="font-semibold text-slate-900">5.2</span>
+                                </div>
+                                <div class="h-1.5 rounded-full bg-slate-100 overflow-hidden">
+                                  <div class="h-full w-[70%] bg-emerald-400"></div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <p class="text-[11px] text-slate-500 pt-1">
+                              VEI is reported by sector, audience tier, and campaign type — giving
+                              leaders an apples-to-apples benchmark across channels.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Slide 3: Drivers & lift “key findings” page -->
+                      <div class="report-slide h-full px-5 py-5 space-y-3 hidden" data-slide-index="2">
+                        <p class="text-[11px] text-slate-500 uppercase tracking-wide">
+                          Slide 3 · Key findings — Drivers &amp; lift
+                        </p>
+                        <h3 class="text-sm sm:text-base font-semibold text-slate-900">
+                          3+1 drivers and modeled impact on VEI
+                        </h3>
+
+                        <div class="grid gap-4 md:grid-cols-2 text-[12px]">
+                          <div class="space-y-1.5">
+                            <p class="font-semibold text-slate-900">Core drivers tracked</p>
+                            <ul class="text-slate-600 space-y-0.5">
+                              <li>• Trust in promise</li>
+                              <li>• Message clarity</li>
+                              <li>• Motivation to act</li>
+                              <li>• Industry-specific ROI-Intent</li>
+                            </ul>
+                          </div>
+                          <div class="space-y-1.5">
+                            <p class="font-semibold text-slate-900">Modeled impact on VEI</p>
+                            <ul class="space-y-0.5">
+                              <li><span class="font-semibold text-emerald-600">+12%</span> lift with clarity fixes</li>
+                              <li><span class="font-semibold text-emerald-600">+8%</span> lift with reward tune</li>
+                              <li><span class="font-semibold text-rose-600">-15%</span> risk flagged for over-messaging</li>
+                            </ul>
+                          </div>
+                        </div>
+
+                        <div class="mt-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-[11px] text-slate-600 leading-relaxed">
+                          <p>
+                            All effects modeled from verified Tier-1/2/3 responses — combined with
+                            historical campaign performance — not vanity metrics. As more data flows
+                            through VEI, these bands become a living benchmark for how real humans
+                            respond across industries.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Footer: controls -->
+                    <div class="px-5 pb-3 pt-2 flex items-center justify-between border-t border-slate-100 bg-slate-50">
+                      <div class="flex items-center gap-1 text-[11px] text-slate-500">
+                        <span id="reportSlideLabel">Slide 1 of 3</span>
+                      </div>
+                      <div class="flex items-center gap-3">
+                        <!-- Dots -->
+                        <div class="flex items-center gap-1.5" id="reportDots">
+                          <button class="h-1.5 w-4 rounded-full bg-slate-900" data-target-slide="0"></button>
+                          <button class="h-1.5 w-1.5 rounded-full bg-slate-300" data-target-slide="1"></button>
+                          <button class="h-1.5 w-1.5 rounded-full bg-slate-300" data-target-slide="2"></button>
+                        </div>
+                        <!-- Arrows -->
+                        <div class="flex items-center gap-1.5">
+                          <button
+                            id="reportPrev"
+                            class="inline-flex items-center justify-center h-6 w-6 rounded-full border border-slate-300 text-[13px] text-slate-600 hover:bg-white"
+                            aria-label="Previous slide"
+                          >
+                            ‹
+                          </button>
+                          <button
+                            id="reportNext"
+                            class="inline-flex items-center justify-center h-6 w-6 rounded-full border border-slate-300 text-[13px] text-slate-600 hover:bg-white"
+                            aria-label="Next slide"
+                          >
+                            ›
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+              <p class="mt-1.5 text-[10px] text-slate-400 text-right pr-1">
+                Mock sample report — layout and metrics shown for illustration only.
+              </p>
+            </div>
+
+            <!-- Right: narrative about the data layer -->
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 space-y-3">
+              <p class="text-sm text-slate-700 leading-relaxed">
+                As AthenaMI scales across CRMs, ESPs, in-app flows, SMS, AR/VR, and wearable feedback,
+                the Verified Engagement Intelligence layer creates something the market has never had:
+                <span class="font-medium text-slate-900">a cross-industry, psychometrically-grounded benchmark for human response.</span>
+              </p>
+
+              <p class="text-sm text-slate-700 leading-relaxed">
+                Aggregated and anonymized VEI patterns can power quarterly and live
+                <span class="font-medium text-slate-900">Engagement Intelligence Reports</span> —
+                giving enterprises a way to compare their trust, clarity, relevance, and ROI-intent scores
+                against industry peers, segments, and global benchmarks.
+              </p>
+
+              <p class="text-sm text-slate-700 leading-relaxed">
+                This positions AthenaMI as more than a product: it becomes a
+                <span class="font-semibold text-slate-900">market-defining standard</span>
+                for how organizations measure, verify, and improve real human engagement —
+                in any channel where people receive messages and respond.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- REVENUE FLYWHEEL (clean cards) -->
+        <section id="flywheel" class="space-y-5">
+          <div class="space-y-2">
+            <p class="text-[11px] font-semibold tracking-wide uppercase text-slate-500">
+              How AthenaMI makes money
+            </p>
+            <h2 class="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900">
+              Simple revenue lines that scale with
+              <span class="text-emerald-600">verified engagement</span>.
+            </h2>
+            <p class="text-[11px] text-slate-500">
+              Subscription, wallet-linked upside, and strategic OEM tiers.
+            </p>
+          </div>
+
+          <div class="grid gap-4 md:grid-cols-3">
+            <!-- Subscription -->
+            <div class="rounded-2xl border border-slate-200 bg-white p-4 space-y-2">
+              <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                1 · Subscription
+              </p>
+              <h3 class="text-sm font-semibold text-slate-900">
+                SaaS plans for teams and enterprises
+              </h3>
+              <p class="text-[13px] text-slate-600 leading-relaxed">
+                Monthly/annual plans priced by active contacts, campaigns, and enabled modules
+                (VEI dashboard, Reliability Engine, Predictive Strength, Action Engine, Simulation, etc.).
+              </p>
+            </div>
+
+            <!-- Wallet fee -->
+            <div class="rounded-2xl border border-slate-200 bg-white p-4 space-y-2">
+              <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                2 · Wallet fee
+              </p>
+              <h3 class="text-sm font-semibold text-slate-900">
+                Platform fee on verified responses
+              </h3>
+              <p class="text-[13px] text-slate-600 leading-relaxed">
+                Clients fund reward budgets for Tier-1/2/3; AthenaMI takes a configurable percentage
+                (e.g., 10%) of every rewarded transaction as a platform fee — tying revenue directly to
+                <span class="font-medium text-slate-900">validated human responses</span>, not impressions.
+              </p>
+            </div>
+
+            <!-- Strategic / white-label -->
+            <div class="rounded-2xl border border-slate-200 bg-white p-4 space-y-2">
+              <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                3 · Strategic insights & white-label
+              </p>
+              <h3 class="text-sm font-semibold text-slate-900">
+                Executive decks and OEM partnerships
+              </h3>
+              <p class="text-[13px] text-slate-600 leading-relaxed">
+                High-touch onboarding, custom dashboards, and "Verified Engagement" reports for leadership —
+                plus a future OEM / embedded tier for large CRM and ESP platforms.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- WHY THIS TEAM / TECH (narrative) -->
+        <section id="team" class="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] items-start">
+          <!-- Left: founder credibility -->
+          <div class="space-y-3">
+            <div class="space-y-2">
+              <p class="text-[11px] font-semibold tracking-wide uppercase text-slate-500">
+                Why this team · Why this tech
+              </p>
+              <h2 class="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900">
+                Founder and engine built for
+                <span class="text-emerald-600">regulated, evidence-driven environments</span>.
+              </h2>
+            </div>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              AthenaMI is built by a founder with an MBA in Entrepreneurship and a PhD in industrial-organizational
+              psychology, who has spent years operating inside a regulated fintech / real-estate platform:
+              running experiments, handling real investors, and owning both product and operations. The same
+              person who designs the models can sit in front of a board, an enterprise buyer, or an engineering
+              team and explain exactly how the system works.
+            </p>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Underneath, the VeriTechIQ engine fuses I-O psychology, reliability gating, psychographic clustering,
+              and ROI-oriented simulation — not as a research project, but as something a future acquirer can trust,
+              certify, and plug straight into their stack.
+            </p>
+          </div>
+
+          <!-- Right: IP & governance -->
+          <div class="rounded-2xl border border-slate-200 bg-white p-4 space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                IP & governance
+              </p>
+              <span class="inline-flex items-center gap-1 rounded-full bg-slate-900 text-slate-50 px-3 py-1 text-[10px]">
+                🛡️ Athena Shield Framework
+              </span>
+            </div>
+            <ul class="text-[13px] text-slate-600 leading-relaxed space-y-1.5">
+              <li>• Provisional patent package drafted for the Verified Engagement Intelligence framework (reliability engine, decision-readiness logic, psychographic pipeline, ROI simulation).</li>
+              <li>• Clear separation between data collection, analytics, and activation to simplify SOC-2 / ISO-style compliance and vendor assessments.</li>
+              <li>• Data Integrity & Trust layer in design: verified vs synthetic data labeling, model version labeling, and org-siloed analytics by default.</li>
+              <li>• Designed so sensitive customer data can remain inside the client’s cloud / CRM while AthenaMI operates as an intelligence layer on top.</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- PRE-SEED CTA -->
+        <section id="next" class="rounded-3xl border border-slate-200 bg-white px-5 py-6 space-y-4 shadow-sm">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div class="space-y-1">
+              <p class="text-[11px] font-semibold tracking-wide uppercase text-slate-500">
+                Pre-seed vision
+              </p>
+              <h2 class="text-sm sm:text-base font-semibold text-slate-900">
+                From MVP dashboards to pilot-ready product —
+                <span class="text-emerald-600">then into the broader engagement ecosystem</span>.
+              </h2>
+            </div>
+            <div class="flex flex-wrap gap-2 text-[11px] text-slate-500">
+              <span class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-3 py-1 text-emerald-800">
+                <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                MVP engine already running
+              </span>
+              <span class="inline-flex items-center gap-1 rounded-full bg-sky-50 px-3 py-1 text-sky-800">
+                <span class="h-1.5 w-1.5 rounded-full bg-sky-500"></span>
+                Provisional patent filed
+              </span>
+            </div>
+          </div>
+
+          <div class="grid gap-4 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] items-start">
+            <div class="space-y-3 text-[13px] text-slate-600 leading-relaxed">
+              <p>
+                The current VeriTechIQ / VEI MVP already demonstrates the core: tiered workflows, reliability
+                gating, psychographic KPIs, clustering hooks, and a working wallet simulation.
+              </p>
+              <p>
+                AthenaMI is raising a <span class="font-semibold text-slate-900">$1.0M pre-seed round</span> to support an
+                approximately 12-month build and pilot plan:
+              </p>
+              <ul class="list-disc pl-5 space-y-1.5">
+                <li>Build out the engineering core and harden the VEI + wallet stack into a pilot-ready product.</li>
+                <li>Formalize an advisory group across I-O psychology, martech, and enterprise sales.</li>
+                <li>Prepare 2–3 high-fit pilot programs with real outbound and lifecycle campaigns.</li>
+              </ul>
+              <p>
+                The patent and architecture are deliberately <span class="font-medium text-slate-900">channel-agnostic</span>:
+                the same Verified Engagement Intelligence layer can extend beyond email into in-app flows, SMS,
+                push, VR/AR environments, wearables, and biometric-aware experiences — anywhere humans receive
+                messages and respond.
+              </p>
+            </div>
+
+            <div class="rounded-2xl border border-slate-100 bg-slate-50 px-4 py-4 space-y-3">
+              <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                If you’d like to go deeper
+              </p>
+              <p class="text-[13px] text-slate-700 leading-relaxed">
+                • Live walkthrough of the VeriTechIQ VEI dashboards and Action Engine<br />
+                • Provisional patent summary &amp; IP roadmap<br />
+                • Data model, integration strategy, and exit-oriented positioning deck
+              </p>
+              <p class="text-[13px] text-slate-700">
+                Interested investors and potential strategic partners can receive
+                <span class="font-semibold text-slate-900">a short memo, demo link, and data-room preview</span>.
+              </p>
+              <div class="flex flex-wrap items-center gap-2 pt-1">
+                <a
+                  href="mailto:travhook@gmail.com?subject=AthenaMI%20investor%20preview"
+                  class="inline-flex items-center justify-center rounded-full bg-slate-900 px-4 py-2 text-[11px] font-semibold text-white shadow-sm hover:bg-slate-800"
+                >
+                  Request investor preview
+                </a>
+                <button
+                  id="openQuickstartBtn2"
+                  type="button"
+                  class="inline-flex items-center justify-center rounded-full border border-slate-300 px-4 py-2 text-[11px] font-semibold text-slate-700 bg-white hover:bg-slate-100"
+                >
+                  Open VEI Quickstart
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 bg-white mt-8">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+        <p class="text-[11px] text-slate-500">
+          © 2025 AthenaMI · Powered by VeriTechIQ™ Verified Engagement Intelligence.
+        </p>
+        <p class="text-[11px] text-slate-400">
+          All engagement insights are directional, model-based, and should be combined with human judgment and ethical review.
+        </p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Quickstart Modal -->
+  <div id="quickstartOverlay" class="fixed inset-0 z-[999] hidden">
+    <div class="absolute inset-0 bg-slate-900/70 backdrop-blur-sm"></div>
+
+    <div class="relative mx-auto mt-10 sm:mt-16 max-w-3xl px-4">
+      <div class="rounded-3xl border border-slate-200 bg-white shadow-2xl overflow-hidden">
+        <div class="px-5 py-4 border-b border-slate-200 flex items-start justify-between gap-3">
+          <div class="space-y-1">
+            <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">VEI demo quickstart</p>
+            <h3 class="text-base sm:text-lg font-semibold text-slate-900">
+              How to navigate + interpret the MVP dashboards
+            </h3>
+            <p class="text-[12px] text-slate-600 leading-relaxed">
+              This is an investor walkthrough view. The engines and logic work; org examples are realistic-but-synthetic.
+            </p>
+          </div>
+
+          <button
+            id="closeQuickstartX"
+            type="button"
+            class="shrink-0 inline-flex items-center justify-center h-9 w-9 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-slate-500"
+            aria-label="Close"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div class="px-5 py-5 space-y-5">
+          <div class="grid gap-3 sm:grid-cols-3">
+            <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 space-y-1">
+              <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">1 · VEI dashboard</p>
+              <p class="text-[13px] text-slate-700 leading-relaxed">
+                Start here for the core VEI score, reliability bands, and Tier-3 driver context.
+              </p>
+            </div>
+
+            <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 space-y-1">
+              <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">2 · Action Engine</p>
+              <p class="text-[13px] text-slate-700 leading-relaxed">
+                Converts drivers into next-best actions. The <span class="font-semibold">Clusters</span> page is linked from Actions.
+              </p>
+            </div>
+
+            <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 space-y-1">
+              <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">3 · Predictive</p>
+              <p class="text-[13px] text-slate-700 leading-relaxed">
+                Shows strongest predictive drivers and lift bands. The <span class="font-semibold">ROI Simulation</span> is linked from Predictive.
+              </p>
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-slate-200 bg-white px-4 py-4 space-y-2">
+            <p class="text-sm font-semibold text-slate-900">What the demo orgs represent</p>
+            <ul class="text-[13px] text-slate-700 leading-relaxed list-disc pl-5 space-y-1">
+              <li><span class="font-semibold">DemoCo</span>: best-case sample depth (shows the full story most clearly).</li>
+              <li><span class="font-semibold">HubSpot</span>: mid maturity / emerging readiness (directional, tightening bands).</li>
+              <li><span class="font-semibold">Salesforce</span>: early / learning state (low reliability; use for "why gating matters").</li>
+              <li><span class="font-semibold">All orgs</span>: aggregated view (useful to show portability across stacks).</li>
+            </ul>
+            <p class="text-[11px] text-slate-500">
+              Reliability bands control how confidently results should be used. Green is decision-grade; emerging/learning is directional.
+            </p>
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-1">
+            <label class="inline-flex items-center gap-2 text-[12px] text-slate-600 select-none">
+              <input id="dontShowAgain" type="checkbox" class="rounded border-slate-300" />
+              Don't show this again on launch
+            </label>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <button
+                id="downloadQuickstartBtn"
+                type="button"
+                class="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-4 py-2 text-[11px] font-semibold text-slate-700 hover:bg-slate-50"
+              >
+                Download quickstart (HTML)
+              </button>
+
+              <a
+                id="openQuickstartPageBtn"
+                href="vei_quickstart.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-4 py-2 text-[11px] font-semibold text-slate-700 hover:bg-slate-50"
+              >
+                Open quickstart page
+              </a>
+
+              <a
+                id="startDashboardBtn"
+                href="vei_v2_demo.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center justify-center rounded-full bg-slate-900 px-4 py-2 text-[11px] font-semibold text-white hover:bg-slate-800"
+              >
+                Start VEI dashboard
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="px-5 py-3 border-t border-slate-200 bg-slate-50 text-[11px] text-slate-500">
+          Tip: keep this landing page open as an anchor and explore dashboards in new tabs.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Simple JS for report carousel -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var slides = Array.prototype.slice.call(document.querySelectorAll(".report-slide"));
+      var dots = Array.prototype.slice.call(document.querySelectorAll("#reportDots button"));
+      var prevBtn = document.getElementById("reportPrev");
+      var nextBtn = document.getElementById("reportNext");
+      var label = document.getElementById("reportSlideLabel");
+
+      if (!slides.length) return;
+
+      var current = 0;
+
+      function setSlide(idx) {
+        current = (idx + slides.length) % slides.length;
+
+        slides.forEach(function (slide, i) {
+          if (i === current) slide.classList.remove("hidden");
+          else slide.classList.add("hidden");
+        });
+
+        dots.forEach(function (dot, i) {
+          if (i === current) {
+            dot.classList.remove("w-1.5", "bg-slate-300");
+            dot.classList.add("w-4", "bg-slate-900");
+          } else {
+            dot.classList.add("w-1.5", "bg-slate-300");
+            dot.classList.remove("w-4", "bg-slate-900");
+          }
+        });
+
+        if (label) label.textContent = "Slide " + (current + 1) + " of " + slides.length;
+      }
+
+      dots.forEach(function (dot, i) {
+        dot.addEventListener("click", function () { setSlide(i); });
+      });
+
+      if (prevBtn) prevBtn.addEventListener("click", function () { setSlide(current - 1); });
+      if (nextBtn) nextBtn.addEventListener("click", function () { setSlide(current + 1); });
+
+      setSlide(0);
+    });
+  </script>
+
+  <!-- Quickstart modal wiring + downloadable cheat sheet -->
+  <script>
+    (function () {
+      var overlay = document.getElementById("quickstartOverlay");
+      var openBtnTop = document.getElementById("openQuickstartBtn");
+      var openBtnBottom = document.getElementById("openQuickstartBtn2");
+      var closeX = document.getElementById("closeQuickstartX");
+      var veiCta = document.getElementById("veiDashboardCta");
+      var dontShow = document.getElementById("dontShowAgain");
+      var downloadBtn = document.getElementById("downloadQuickstartBtn");
+
+      function showOverlay() {
+        if (!overlay) return;
+        overlay.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+      }
+
+      function hideOverlay() {
+        if (!overlay) return;
+        overlay.classList.add("hidden");
+        document.body.style.overflow = "";
+      }
+
+      function getPref() {
+        try { return localStorage.getItem("vei_quickstart_hide") === "1"; }
+        catch (e) { return false; }
+      }
+
+      function setPref(val) {
+        try { localStorage.setItem("vei_quickstart_hide", val ? "1" : "0"); }
+        catch (e) {}
+      }
+
+      // Open via header / CTA helper buttons
+      if (openBtnTop) openBtnTop.addEventListener("click", function () { showOverlay(); });
+      if (openBtnBottom) openBtnBottom.addEventListener("click", function () { showOverlay(); });
+
+      if (closeX) {
+        closeX.addEventListener("click", function () {
+          if (dontShow && dontShow.checked) setPref(true);
+          hideOverlay();
+        });
+      }
+
+      // Click outside card closes
+      if (overlay) {
+        overlay.addEventListener("click", function (e) {
+          if (e.target === overlay || (e.target && e.target.classList && e.target.classList.contains("bg-slate-900/70"))) {
+            if (dontShow && dontShow.checked) setPref(true);
+            hideOverlay();
+          }
+        });
+      }
+
+      // Intercept primary CTA once (unless user opted out)
+      if (veiCta) {
+        veiCta.addEventListener("click", function (e) {
+          if (getPref()) return; // allow normal new-tab navigation
+          e.preventDefault();
+          showOverlay();
+        });
+      }
+
+      // Download cheat sheet as a standalone HTML file
+      function buildQuickstartHtml() {
+        var lines = [];
+        lines.push("<!doctype html>");
+        lines.push("<html lang=\"en\">");
+        lines.push("<head>");
+        lines.push("<meta charset=\"utf-8\"/>");
+        lines.push("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>");
+        lines.push("<title>AthenaMI VEI Demo Quickstart</title>");
+        lines.push("<style>");
+        lines.push("body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:#0b1220;color:#e5e7eb;}");
+        lines.push(".wrap{max-width:900px;margin:0 auto;padding:28px;}");
+        lines.push(".card{background:#111a2e;border:1px solid rgba(148,163,184,0.18);border-radius:18px;padding:16px;margin:14px 0;}");
+        lines.push("h1{font-size:22px;margin:0 0 8px;}");
+        lines.push("h2{font-size:14px;margin:0 0 8px;color:#93c5fd;text-transform:uppercase;letter-spacing:.12em;}");
+        lines.push("p,li{font-size:13px;line-height:1.55;color:#cbd5e1;}");
+        lines.push(".pill{display:inline-block;padding:2px 10px;border-radius:999px;border:1px solid rgba(148,163,184,0.25);font-size:11px;color:#e2e8f0;margin-right:6px;}");
+        lines.push("a{color:#93c5fd;text-decoration:none;}");
+        lines.push("</style>");
+        lines.push("</head>");
+        lines.push("<body>");
+        lines.push("<div class=\"wrap\">");
+        lines.push("<div class=\"card\">");
+        lines.push("<h1>AthenaMI · VEI Demo Quickstart</h1>");
+        lines.push("<p>Investor walkthrough view. Engines and logic work; org examples are realistic-but-synthetic for demo clarity.</p>");
+        lines.push("</div>");
+
+        lines.push("<div class=\"card\">");
+        lines.push("<h2>Navigation</h2>");
+        lines.push("<p><span class=\"pill\">1</span><strong>VEI Dashboard</strong>: core VEI score, reliability bands, and Tier-3 driver context.</p>");
+        lines.push("<p><span class=\"pill\">2</span><strong>Action Engine</strong>: converts drivers into recommended moves. <strong>Clusters</strong> is linked from Actions.</p>");
+        lines.push("<p><span class=\"pill\">3</span><strong>Predictive</strong>: strongest predictive drivers and lift bands. <strong>ROI Simulation</strong> is linked from Predictive.</p>");
+        lines.push("</div>");
+
+        lines.push("<div class=\"card\">");
+        lines.push("<h2>Demo orgs</h2>");
+        lines.push("<ul>");
+        lines.push("<li><strong>DemoCo</strong>: best-case sample depth; easiest place to see the full story.</li>");
+        lines.push("<li><strong>HubSpot</strong>: emerging readiness; directional results with tightening bands.</li>");
+        lines.push("<li><strong>Salesforce</strong>: learning state; illustrates why reliability gating matters.</li>");
+        lines.push("<li><strong>All orgs</strong>: aggregate view; shows portability across stacks.</li>");
+        lines.push("</ul>");
+        lines.push("</div>");
+
+        lines.push("<div class=\"card\">");
+        lines.push("<h2>How to interpret reliability</h2>");
+        lines.push("<ul>");
+        lines.push("<li><strong>Green</strong>: decision-grade (enough sample + internal consistency).</li>");
+        lines.push("<li><strong>Emerging / Learning</strong>: directional (use as hypothesis + test plan, not final truth).</li>");
+        lines.push("</ul>");
+        lines.push("</div>");
+
+        lines.push("<div class=\"card\">");
+        lines.push("<h2>Suggested walkthrough</h2>");
+        lines.push("<ol>");
+        lines.push("<li>Open <strong>VEI Dashboard</strong> and note the top driver + reliability band.</li>");
+        lines.push("<li>Jump to <strong>Action Engine</strong> for next-best moves; open <strong>Clusters</strong> to see segment narratives.</li>");
+        lines.push("<li>Use <strong>Predictive</strong> to see which driver most strongly relates to KPI movement; open <strong>ROI Simulation</strong> to translate lift bands into directional revenue scenarios.</li>");
+        lines.push("</ol>");
+        lines.push("</div>");
+
+        lines.push("<div class=\"card\">");
+        lines.push("<p style=\"color:#94a3b8;font-size:11px;\">© 2025 AthenaMI / VeriTechIQ. Demo-only preview.</p>");
+        lines.push("</div>");
+
+        lines.push("</div>");
+        lines.push("</body>");
+        lines.push("</html>");
+        return lines.join("\n");
+      }
+
+      function downloadHtml(filename, html) {
+        var blob = new Blob([html], { type: "text/html;charset=utf-8" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(function () { URL.revokeObjectURL(url); }, 800);
+      }
+
+      if (downloadBtn) {
+        downloadBtn.addEventListener("click", function () {
+          downloadHtml("AthenaMI_VEI_Quickstart.html", buildQuickstartHtml());
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

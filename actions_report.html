@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>VeriTechIQ – Intelligence Report (Demo)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    @media print {
+      body { background: #ffffff !important; }
+      #screen-only { display: none !important; }
+      .page-container {
+        box-shadow: none !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0.5in 0.8in !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-slate-100 text-slate-900">
+
+  <div class="page-container max-w-5xl mx-auto my-6 bg-white shadow-xl rounded-2xl border border-slate-200 px-8 py-8 space-y-6">
+
+    <!-- Screen-only controls -->
+    <div id="screen-only" class="flex items-center justify-between mb-4 text-xs text-slate-500">
+      <p>VeriTechIQ – Print-Friendly Intelligence Report (Demo)</p>
+      <div class="flex items-center gap-2">
+        <button
+          id="backToActionsBtn"
+          class="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100"
+        >
+          ← Back to Action Engine
+        </button>
+        <button
+          onclick="window.print()"
+          class="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100"
+        >
+          <span>Print / Save as PDF</span>
+          <span class="text-[10px]">⌘+P</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <header class="flex flex-col gap-4 border-b border-slate-200 pb-4">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <h1 class="text-2xl font-semibold tracking-tight text-slate-900">
+            VeriTechIQ Intelligence Report
+          </h1>
+          <p class="mt-1 text-sm text-slate-600">
+            Executive summary of predictive drivers, psychographic patterns, and recommended actions.
+          </p>
+        </div>
+        <div class="text-right text-xs text-slate-500">
+          <p id="reportDate">Generated: —</p>
+          <p>VeriTechIQ™ Verified Engagement Intelligence</p>
+        </div>
+      </div>
+
+      <dl class="grid gap-3 text-sm sm:grid-cols-3">
+        <div>
+          <dt class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+            Subscription Tier
+          </dt>
+          <dd id="reportTier" class="mt-0.5 text-slate-900">—</dd>
+        </div>
+        <div>
+          <dt class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+            Org · Campaign
+          </dt>
+          <dd id="reportOrgCampaign" class="mt-0.5 text-slate-900">—</dd>
+        </div>
+        <div>
+          <dt class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+            Data Window
+          </dt>
+          <dd id="reportWindow" class="mt-0.5 text-slate-900">
+            Demo window (up to 800 days of Tier-3 + engagement data)
+          </dd>
+        </div>
+      </dl>
+
+      <!-- Snapshot warning (only shows if we did NOT receive a snapshot) -->
+      <div id="snapshotWarning" class="hidden rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-900">
+        <span class="font-semibold">Note:</span>
+        This report did not receive a live snapshot from the Action Engine tab, so it may not match the on-screen demo values.
+        Go back to the Action Engine and click “Download Intelligence Report” again.
+      </div>
+    </header>
+
+    <!-- Section 1 -->
+    <section class="space-y-4">
+      <h2 class="text-base font-semibold tracking-wide text-slate-900">
+        1. Decision Readiness & Key Predictive Drivers
+      </h2>
+
+      <div class="grid gap-4 md:grid-cols-3 text-sm">
+        <div class="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-1">
+          <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+            Decision Readiness
+          </p>
+          <p id="decisionStatus" class="text-lg font-semibold text-emerald-700">—</p>
+          <p id="decisionDetail" class="text-xs text-slate-700">—</p>
+          <p id="reliabilityMeta" class="text-[11px] text-slate-600 mt-1">—</p>
+        </div>
+
+        <div class="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-2">
+          <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+            Strongest Predictive Drivers
+          </p>
+          <ul id="driverList" class="text-xs text-slate-700 space-y-1">
+            <li>—</li>
+          </ul>
+        </div>
+
+        <div class="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-1">
+          <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+            Scope & Freshness
+          </p>
+          <p id="scopeSummary" class="text-xs text-slate-700">—</p>
+          <p id="scopeUpdated" class="text-[11px] text-slate-500 mt-1">Last updated: —</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2 -->
+    <section class="space-y-3">
+      <h2 class="text-base font-semibold tracking-wide text-slate-900">
+        2. Psychographic Profile (Tier-3 Constructs)
+      </h2>
+
+      <p id="psychographicProfileName" class="text-sm font-semibold text-sky-700">
+        Audience profile: —
+      </p>
+
+      <p id="psychographicSummary" class="text-sm text-slate-700">
+        —
+      </p>
+
+      <ul id="psychographicList" class="grid gap-2 text-sm sm:grid-cols-2"></ul>
+
+      <div class="space-y-1 text-xs text-slate-600">
+        <p id="segmentPrimaryText">Primary segment: —</p>
+        <p id="segmentSecondaryText">Secondary segment: —</p>
+      </div>
+
+      <p class="text-xs text-slate-500">
+        VeriTechIQ focuses on how your audience <span class="font-semibold">thinks and decides</span>
+        (Trust, Clarity, Motivation, ROI Intent), rather than who they are demographically.
+        These patterns inform the recommended actions below.
+      </p>
+    </section>
+
+    <!-- Section 3 -->
+    <section class="space-y-3">
+      <div class="flex items-baseline justify-between gap-4">
+        <h2 class="text-base font-semibold tracking-wide text-slate-900">
+          3. Recommended Actions
+        </h2>
+        <p id="summaryLift" class="text-xs font-medium text-emerald-700">
+          Expected impact: —
+        </p>
+      </div>
+
+      <div id="recommendationsContainer" class="space-y-3 text-sm"></div>
+    </section>
+
+    <!-- Section 4 -->
+    <section class="space-y-3">
+      <h2 class="text-base font-semibold tracking-wide text-slate-900">
+        4. ROI & Strategy Summary
+      </h2>
+      <div class="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-800">
+        <p id="roiSummary">—</p>
+      </div>
+      <p class="text-xs text-slate-500">
+        Demo note: In production, this report is computed from verified engagement data and reliability gating.
+      </p>
+    </section>
+
+  </div>
+
+  <script>
+    (function () {
+      // ─────────────────────────────────────────────────────────────
+      // URL params: ./actions_report.html?org=hubspot&tier=3&campaign_id=
+      // ─────────────────────────────────────────────────────────────
+      var urlObj = new URL(window.location.href);
+      var tierParam = parseInt(urlObj.searchParams.get("tier") || "3", 10);
+      if (isNaN(tierParam) || tierParam < 1 || tierParam > 3) tierParam = 3;
+      var campaignParam = (urlObj.searchParams.get("campaign_id") || "").trim();
+      var orgParam = (urlObj.searchParams.get("org") || "democo").trim().toLowerCase();
+
+      // DOM
+      var reportDateEl = document.getElementById("reportDate");
+      var reportTierEl = document.getElementById("reportTier");
+      var reportOrgCampaignEl = document.getElementById("reportOrgCampaign");
+
+      var decisionStatusEl = document.getElementById("decisionStatus");
+      var decisionDetailEl = document.getElementById("decisionDetail");
+      var reliabilityMetaEl = document.getElementById("reliabilityMeta");
+
+      var driverListEl = document.getElementById("driverList");
+      var scopeSummaryEl = document.getElementById("scopeSummary");
+      var scopeUpdatedEl = document.getElementById("scopeUpdated");
+
+      var psychographicProfileNameEl = document.getElementById("psychographicProfileName");
+      var psychographicSummaryEl = document.getElementById("psychographicSummary");
+      var psychographicListEl = document.getElementById("psychographicList");
+      var segmentPrimaryTextEl = document.getElementById("segmentPrimaryText");
+      var segmentSecondaryTextEl = document.getElementById("segmentSecondaryText");
+
+      var recommendationsContainer = document.getElementById("recommendationsContainer");
+      var summaryLiftEl = document.getElementById("summaryLift");
+      var roiSummaryEl = document.getElementById("roiSummary");
+
+      var snapshotWarningEl = document.getElementById("snapshotWarning");
+      var backBtn = document.getElementById("backToActionsBtn");
+
+      // Back button: keep same org/tier/campaign when returning
+      if (backBtn) {
+        backBtn.addEventListener("click", function () {
+          var url =
+            "./actions.html" +
+            "?org=" + encodeURIComponent(orgParam) +
+            "&tier=" + encodeURIComponent(String(tierParam)) +
+            "&campaign_id=" + encodeURIComponent(campaignParam || "");
+          window.location.href = url;
+        });
+      }
+
+      function tierLabel(tier) {
+        if (tier === 1) return "Tier 1 – Basic";
+        if (tier === 2) return "Tier 2 – Growth";
+        return "Tier 3 – Enterprise";
+      }
+      function tierDescription(tier) {
+        if (tier === 1) return "Simple reliability check + one main recommendation.";
+        if (tier === 2) return "Multiple drivers, 2–3 recommendations, and lift estimates.";
+        return "Full executive pack: deep insights, optimization guidance, and ROI estimates.";
+      }
+
+      function setList(el, items) {
+        if (!el) return;
+        if (!items || !items.length) {
+          el.innerHTML = "<li>—</li>";
+          return;
+        }
+        el.innerHTML = items.map(function (txt) {
+          return "<li>" + escapeHtml(String(txt)) + "</li>";
+        }).join("");
+      }
+
+      function setCards(container, cards) {
+        if (!container) return;
+        if (!cards || !cards.length) {
+          container.innerHTML = "<p class='text-sm text-slate-700'>—</p>";
+          return;
+        }
+        container.innerHTML = cards.map(function (c) {
+          return (
+            "<article class='rounded-xl border border-slate-200 bg-slate-50 p-4'>" +
+              "<h3 class='text-sm font-semibold text-slate-900 mb-1'>" + escapeHtml(c.title || "Recommendation") + "</h3>" +
+              "<p class='text-xs text-slate-700'>" + escapeHtml(c.body || "") + "</p>" +
+            "</article>"
+          );
+        }).join("");
+      }
+
+      function setConstructGrid(items) {
+        if (!psychographicListEl) return;
+        if (!items || !items.length) {
+          psychographicListEl.innerHTML = "";
+          return;
+        }
+        // items can be either pre-rendered strings, or {label, value}
+        psychographicListEl.innerHTML = items.map(function (it) {
+          if (typeof it === "string") {
+            return (
+              "<li class='rounded-lg border border-slate-200 bg-slate-50 px-3 py-2'>" +
+              escapeHtml(it) +
+              "</li>"
+            );
+          }
+          var label = it.label || it.name || "Construct";
+          var value = it.value || it.text || "";
+          return (
+            "<li class='rounded-lg border border-slate-200 bg-slate-50 px-3 py-2'>" +
+              "<span class='font-semibold text-slate-900'>" + escapeHtml(label) + ":</span> " +
+              "<span class='text-slate-900'>" + escapeHtml(value) + "</span>" +
+            "</li>"
+          );
+        }).join("");
+      }
+
+      function escapeHtml(s) {
+        return String(s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      // ─────────────────────────────────────────────────────────────
+      // 1) Try to read a snapshot from the Action Engine tab
+      //    (This is what will make PDF ALWAYS match the on-screen view.)
+      // ─────────────────────────────────────────────────────────────
+      var snapshot = null;
+      try {
+        var raw = sessionStorage.getItem("vei_actions_report_snapshot");
+        if (raw) snapshot = JSON.parse(raw);
+      } catch (e) {
+        snapshot = null;
+      }
+
+      // basic validation: must match org + tier + campaign from URL to be used
+      var canUseSnapshot =
+        snapshot &&
+        typeof snapshot === "object" &&
+        (snapshot.org || "").toLowerCase() === orgParam &&
+        String(snapshot.tier || "") === String(tierParam) &&
+        String(snapshot.campaign_id || "") === String(campaignParam || "");
+
+      // ─────────────────────────────────────────────────────────────
+      // Render header basics
+      // ─────────────────────────────────────────────────────────────
+      var now = new Date();
+      reportDateEl.textContent =
+        "Generated: " + now.toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
+
+      var campaignLabel = campaignParam || "All campaigns";
+      reportOrgCampaignEl.textContent = (orgParam || "democo") + " · " + campaignLabel;
+      reportTierEl.textContent = tierLabel(tierParam) + " – " + tierDescription(tierParam);
+
+      // ─────────────────────────────────────────────────────────────
+      // 2) Snapshot-driven render (preferred)
+      // ─────────────────────────────────────────────────────────────
+      if (canUseSnapshot) {
+        if (snapshotWarningEl) snapshotWarningEl.classList.add("hidden");
+
+        // Section 1
+        decisionStatusEl.textContent = snapshot.decision_status || "—";
+        decisionDetailEl.textContent = snapshot.decision_detail || "—";
+        reliabilityMetaEl.textContent = snapshot.reliability_meta || "—";
+
+        setList(driverListEl, snapshot.driver_list || []);
+
+        scopeSummaryEl.textContent = snapshot.scope_summary || ("Scope: " + orgParam + " · " + campaignLabel + " – " + tierLabel(tierParam));
+        scopeUpdatedEl.textContent = snapshot.scope_updated || ("Last updated: " + (snapshot.updated_at || "—"));
+
+        // Section 2
+        psychographicProfileNameEl.textContent = snapshot.psych_profile_name || "Audience profile: —";
+        psychographicSummaryEl.textContent = snapshot.psych_summary || "—";
+        setConstructGrid(snapshot.psych_constructs || []);
+
+        segmentPrimaryTextEl.textContent = snapshot.segment_primary || "Primary segment: —";
+        segmentSecondaryTextEl.textContent = snapshot.segment_secondary || "Secondary segment: —";
+
+        // Section 3
+        summaryLiftEl.textContent = snapshot.summary_lift || "Expected impact: —";
+        setCards(recommendationsContainer, snapshot.recommendations || []);
+
+        // Section 4
+        roiSummaryEl.textContent = snapshot.roi_summary || "—";
+
+        return; // ✅ done
+      }
+
+      // ─────────────────────────────────────────────────────────────
+      // 3) Fallback render (if opened directly, no snapshot)
+      // ─────────────────────────────────────────────────────────────
+      if (snapshotWarningEl) snapshotWarningEl.classList.remove("hidden");
+
+      decisionStatusEl.textContent = "—";
+      decisionDetailEl.textContent = "This report was opened without a live snapshot from the Action Engine tab.";
+      reliabilityMetaEl.textContent = "Reliability: —";
+
+      driverListEl.innerHTML = "<li>—</li>";
+      scopeSummaryEl.textContent = "Scope: " + orgParam + " · " + campaignLabel + " – " + tierLabel(tierParam);
+      scopeUpdatedEl.textContent = "Last updated: —";
+
+      psychographicProfileNameEl.textContent = "Audience profile: —";
+      psychographicSummaryEl.textContent =
+        "Go back to the Action Engine and click “Download Intelligence Report” so this PDF mirrors the exact on-screen values.";
+      psychographicListEl.innerHTML = "";
+      segmentPrimaryTextEl.textContent = "Primary segment: —";
+      segmentSecondaryTextEl.textContent = "Secondary segment: —";
+
+      summaryLiftEl.textContent = "Expected impact: —";
+      recommendationsContainer.innerHTML =
+        "<p class='text-sm text-slate-700'>No snapshot received.</p>";
+
+      roiSummaryEl.textContent =
+        "To generate an executive-ready report that matches the Action Engine view, return to Actions and download again.";
+    })();
+  </script>
+
+  <!-- Footer / Notes -->
+  <div class="mt-12 pt-6 border-t border-slate-300 text-[11px] leading-relaxed text-slate-600 max-w-5xl mx-auto px-8 pb-10">
+    <p class="font-semibold text-slate-700 mb-2">
+      VeriTechIQ Verified Engagement Intelligence — Methodological Notes & Disclaimers
+    </p>
+    <p class="mt-2">
+      This demo report is generated in a local demo environment. In production, all metrics are computed from verified engagement data
+      with reliability gating (e.g., Cronbach’s α + sample size thresholds).
+    </p>
+
+    <div class="w-full flex flex-col items-center mt-10 pt-6 border-t border-slate-200">
+      <p class="text-[10px] tracking-wide uppercase font-semibold text-slate-700">
+        VeriTechIQ™ Verified Engagement Intelligence
+      </p>
+      <p class="text-[10px] text-slate-500 mt-1">
+        © 2025 VeriTechIQ. All rights reserved.
+      </p>
+    </div>
+  </div>
+
+</body>
+</html>

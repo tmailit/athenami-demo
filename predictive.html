@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>VeriTechIQ – Predictive Strength (Demo)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+  <div class="max-w-6xl mx-auto px-4 py-6 space-y-6">
+
+    <!-- Top Nav: match demo folder -->
+    <nav class="mb-2 border-b border-slate-800 pb-2">
+      <div class="flex flex-wrap items-center gap-2 text-xs">
+        <a
+          href="./vei_v2_demo.html"
+          class="inline-flex items-center gap-1 rounded-full border border-slate-700 bg-slate-900/70 px-3 py-1.5
+                 font-medium text-slate-200 hover:border-sky-500/60 hover:text-sky-300 transition"
+        >
+          <span class="h-1.5 w-1.5 rounded-full bg-slate-400"></span>
+          <span>Home · VEI v2</span>
+        </a>
+
+        <a
+          href="./actions.html"
+          class="inline-flex items-center gap-1 rounded-full border border-slate-700 bg-slate-900/70 px-3 py-1.5
+                 font-medium text-slate-200 hover:border-sky-500/60 hover:text-sky-300 transition"
+        >
+          <span class="h-1.5 w-1.5 rounded-full bg-slate-400"></span>
+          <span>Action Engine</span>
+        </a>
+      </div>
+    </nav>
+
+    <!-- Header with ORG selector -->
+    <header class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div class="space-y-1">
+        <h1 class="text-2xl sm:text-3xl font-semibold tracking-tight">
+          Predictive Strength – Tier-3 vs Legacy
+        </h1>
+        <p class="text-sm text-slate-300">
+          Demo view of how VeriTechIQ Tier-3 constructs predict outcomes compared to legacy metrics
+          (opens/clicks/vanity engagement) after passing the Reliability Verification Gate (Cronbach’s α).
+        </p>
+      </div>
+
+      <div class="flex flex-col items-stretch gap-2 sm:items-end sm:gap-3">
+        <!-- ORG selector -->
+        <div class="flex items-center gap-2 justify-end">
+          <span class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Org</span>
+          <div
+            id="orgSelector"
+            class="inline-flex items-center rounded-full border border-slate-700 bg-slate-900/80 p-1 text-xs font-medium shadow-sm"
+          >
+            <button
+              type="button"
+              class="org-pill org-pill-active rounded-full px-3 py-1 text-[11px] tracking-wide bg-emerald-500 text-slate-950 shadow-sm shadow-emerald-500/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/70 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+              data-org="democo"
+            >DemoCo</button>
+
+            <button
+              type="button"
+              class="org-pill rounded-full px-3 py-1 text-[11px] tracking-wide text-slate-200 hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/70 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+              data-org="hubspot"
+            >HubSpot</button>
+
+            <button
+              type="button"
+              class="org-pill rounded-full px-3 py-1 text-[11px] tracking-wide text-slate-200 hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/70 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+              data-org="salesforce"
+            >Salesforce</button>
+
+            <button
+              type="button"
+              class="org-pill rounded-full px-3 py-1 text-[11px] tracking-wide text-slate-200 hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/70 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+              data-org="all"
+            >All orgs</button>
+          </div>
+        </div>
+
+        <!-- Campaign filter (demo-only label) -->
+        <div class="flex items-center gap-2 justify-end">
+          <input
+            id="campaignInput"
+            type="text"
+            placeholder="All campaigns"
+            class="w-40 sm:w-56 rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm
+                   placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500/70"
+          />
+          <button
+            id="campaignButton"
+            class="rounded-xl bg-sky-500 hover:bg-sky-400 active:bg-sky-600 px-4 py-2
+                   text-sm font-medium text-slate-950 transition"
+          >Apply</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Top summary row -->
+    <section class="grid gap-4 md:grid-cols-3">
+      <!-- Tier-3 card -->
+      <article class="col-span-1 rounded-2xl border border-emerald-500/40 bg-gradient-to-br from-emerald-500/10 via-slate-950 to-slate-950 p-4 flex flex-col gap-2">
+        <div class="flex items-center justify-between gap-2">
+          <h2 class="text-sm font-semibold text-emerald-300 uppercase tracking-wide">Tier-3 (VeriTechIQ)</h2>
+          <span id="tier3BandBadge" class="inline-flex items-center rounded-full bg-slate-800 px-2.5 py-0.5 text-[11px] font-medium uppercase tracking-wide">—</span>
+        </div>
+        <p class="text-xs text-slate-300">
+          Predictive power of Tier-3 constructs (Trust, Clarity, Motivation, +1) after reliability gating.
+        </p>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span id="tier3R2" class="text-3xl font-semibold tabular-nums">—</span>
+          <span class="text-xs text-slate-400">R² vs business outcome</span>
+        </div>
+        <p id="tier3N" class="text-xs text-slate-400 mt-1">n = —</p>
+        <p id="tier3ReliabilityMeta" class="text-[11px] text-slate-400">
+          Reliability: Cronbach’s α — · n = — (Learning mode)
+        </p>
+      </article>
+
+      <!-- Legacy card -->
+      <article class="col-span-1 rounded-2xl border border-slate-700 bg-slate-900/60 p-4 flex flex-col gap-2">
+        <div class="flex items-center justify-between gap-2">
+          <h2 class="text-sm font-semibold text-amber-300 uppercase tracking-wide">Legacy Metrics</h2>
+          <span id="legacyBandBadge" class="inline-flex items-center rounded-full bg-slate-800 px-2.5 py-0.5 text-[11px] font-medium uppercase tracking-wide">—</span>
+        </div>
+        <p class="text-xs text-slate-300">
+          Predictive power of legacy email metrics (opens, clicks, generic engagement scores).
+        </p>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span id="legacyR2" class="text-3xl font-semibold tabular-nums">—</span>
+          <span class="text-xs text-slate-400">R² vs business outcome</span>
+        </div>
+        <p id="legacyN" class="text-xs text-slate-400 mt-1">n = —</p>
+      </article>
+
+      <!-- Reliability engine -->
+      <article class="col-span-1 rounded-2xl border border-slate-700 bg-slate-900/50 p-4 flex flex-col justify-between gap-3">
+        <div class="space-y-2">
+          <div class="flex items-center justify-between gap-2">
+            <h2 class="text-sm font-semibold text-sky-300 uppercase tracking-wide">Reliability Engine</h2>
+
+            <div class="flex flex-col items-end gap-1">
+              <span id="reliabilityBandBadge"
+                class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium uppercase tracking-wide bg-slate-800"
+              >—</span>
+
+              <span class="relative group inline-flex">
+                <span id="dataIntegrityBadge"
+                  class="inline-flex items-center gap-1.5 rounded-full border border-slate-600 bg-slate-900/80 px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-slate-200"
+                >
+                  <span id="dataIntegrityDot" class="h-1.5 w-1.5 rounded-full bg-slate-400"></span>
+                  <span id="dataIntegrityText">Source: —</span>
+                </span>
+
+                <span
+                  class="pointer-events-none absolute right-0 top-full mt-1 w-64 rounded-md bg-slate-900 px-3 py-2 text-[10px] font-normal text-slate-100 opacity-0 shadow-lg ring-1 ring-slate-700 transition-opacity group-hover:opacity-100"
+                >
+                  Data integrity = whether this view is based on verified Tier-3 responses vs. a seeded demo default.
+                  Confidence is a simple heuristic using reliability band + sample size + fallback status.
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <p id="reliabilityStatus" class="text-xs text-slate-200">Reliability status: assessing Cronbach’s α and sample size…</p>
+          <p id="reliabilityMeta" class="text-[11px] text-slate-400">Cronbach’s α: — · Tier-3 n: —</p>
+
+          <ul class="mt-1 text-[11px] text-slate-300 space-y-0.5 list-disc list-inside">
+            <li>Cronbach’s α <span class="font-semibold">≥ .70</span> and stable.</li>
+            <li>Sample size <span class="font-semibold">n ≥ 100</span> for “Decision-Ready”.</li>
+            <li>Otherwise: <span class="text-amber-300 font-semibold">Emerging</span> or <span class="text-slate-300 font-semibold">Learning</span>.</li>
+          </ul>
+        </div>
+
+        <p class="text-[11px] text-slate-400">
+          No shaky stats, no vanity stories. Green is safe for high-stakes decisions; amber/gray fuel controlled experiments.
+        </p>
+      </article>
+    </section>
+
+    <!-- Comparison bars -->
+    <section class="space-y-4">
+      <div class="flex items-center justify-between gap-2">
+        <h2 class="text-sm font-semibold tracking-wide text-slate-100">Predictive Strength Comparison (R²)</h2>
+        <p id="metaCampaign" class="text-xs text-slate-400">
+          Campaign scope: <span class="font-medium text-sky-300">All</span>
+        </p>
+      </div>
+
+      <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 space-y-4">
+        <div class="flex flex-wrap items-center gap-3 text-[11px] text-slate-300">
+          <div class="inline-flex items-center gap-1.5">
+            <span class="h-2.5 w-5 rounded-full bg-emerald-500/80"></span><span>Tier-3 R²</span>
+          </div>
+          <div class="inline-flex items-center gap-1.5">
+            <span class="h-2.5 w-5 rounded-full bg-amber-400/90"></span><span>Legacy R²</span>
+          </div>
+          <span class="text-slate-500">&middot;</span>
+          <span>
+            Bands:
+            <span class="font-medium text-emerald-300">Green ≥ .25</span>,
+            <span class="font-medium text-amber-300">Amber .10–.24</span>,
+            <span class="font-medium text-rose-300">Red &lt; .10</span>
+          </span>
+        </div>
+
+        <div class="space-y-3">
+          <div>
+            <div class="flex items-center justify-between text-xs mb-1.5">
+              <span class="font-medium text-slate-100">Tier-3 (VeriTechIQ)</span>
+              <span id="tier3R2Label" class="tabular-nums text-slate-300">—</span>
+            </div>
+            <div class="h-7 w-full rounded-full bg-slate-800/80 overflow-hidden">
+              <div id="tier3Bar" class="h-full rounded-full bg-emerald-500/80 transition-[width] duration-500 ease-out" style="width:0%"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between text-xs mb-1.5">
+              <span class="font-medium text-slate-100">Legacy metrics</span>
+              <span id="legacyR2Label" class="tabular-nums text-slate-300">—</span>
+            </div>
+            <div class="h-7 w-full rounded-full bg-slate-800/80 overflow-hidden">
+              <div id="legacyBar" class="h-full rounded-full bg-amber-400/90 transition-[width] duration-500 ease-out" style="width:0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <p id="legacyNote" class="text-[11px] text-slate-400"></p>
+      </div>
+    </section>
+
+    <!-- KPI Impact Predictor -->
+    <section class="mt-6 space-y-2">
+      <h2 class="text-sm font-semibold tracking-wide text-slate-100">KPI Impact Predictor</h2>
+      <p class="text-[11px] text-slate-400">
+        Directional lift window driven by the strongest Tier-3 lever. Becomes decision-grade when Reliability is green.
+      </p>
+
+      <div id="kpiPredictorCard" class="mt-3 rounded-2xl border border-slate-800 bg-slate-900/70 p-4 space-y-3">
+        <p id="kpiSummary" class="text-[12px] text-slate-300">Loading KPI projections…</p>
+
+        <dl class="grid grid-cols-2 gap-4 text-xs">
+          <div><dt class="text-slate-400">Estimated KPI lift range</dt><dd id="kpiLiftRange" class="text-emerald-300">—</dd></div>
+          <div><dt class="text-slate-400">Current KPI baseline</dt><dd id="kpiBaseline" class="text-slate-300">—</dd></div>
+          <div><dt class="text-slate-400">Driver influence</dt><dd id="kpiDriverStrength" class="text-sky-300">—</dd></div>
+          <div><dt class="text-slate-400">High-intent segment shift</dt><dd id="kpiSegmentShift" class="text-slate-300">—</dd></div>
+          <div>
+            <dt class="text-slate-400">Tier-1 + Tier-3 uplift (directional)</dt>
+            <dd id="kpiTierUplift" class="text-slate-300">—</dd>
+          </div>
+        </dl>
+
+        <button id="kpiRunSimulation" type="button"
+          class="mt-3 rounded-xl bg-sky-500 hover:bg-sky-400 active:bg-sky-600 px-4 py-2 text-xs font-medium text-slate-950 transition"
+        >
+          Run Simulation with this driver →
+        </button>
+      </div>
+    </section>
+
+    <!-- Detail table -->
+    <section class="space-y-3">
+      <div class="flex items-center justify-between gap-2">
+        <h2 class="text-sm font-semibold tracking-wide text-slate-100">Construct & Metric Details</h2>
+        <p id="lastUpdated" class="text-xs text-slate-400">Last updated: —</p>
+      </div>
+
+      <div class="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/60">
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-xs">
+            <thead class="bg-slate-900/80 text-slate-300">
+              <tr class="border-b border-slate-800/80">
+                <th class="px-3 py-2 text-left font-medium">Construct / Metric</th>
+                <th class="px-3 py-2 text-left font-medium">Source</th>
+                <th class="px-3 py-2 text-right font-medium">R²</th>
+                <th class="px-3 py-2 text-right font-medium">Decision Band</th>
+                <th class="px-3 py-2 text-right font-medium">n</th>
+              </tr>
+            </thead>
+            <tbody id="detailsBody" class="divide-y divide-slate-800/80">
+              <tr><td colspan="5" class="px-3 py-4 text-center text-slate-400">Loading predictive metrics…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <p class="text-[11px] text-slate-400">
+        Interpretation:
+        <span class="font-semibold text-emerald-300">Green</span> = strong predictive link to ROI;
+        <span class="font-semibold text-amber-300">Amber</span> = emerging but usable signal;
+        <span class="font-semibold text-rose-300">Red</span> = weak/unstable.
+      </p>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      // ─────────────────────────────────────────────────────────────
+      // DEMO DATA BUNDLES (single source of truth for this page)
+      // Numeric choices are intentionally consistent with “early signal” across pages:
+      // - No org is fully green/decision-ready in this MVP demo.
+      // - Tier-3 generally beats legacy, even while emerging/learning.
+      // - Tier-3 construct Ns can differ slightly due to partial completions / data quality.
+      // ─────────────────────────────────────────────────────────────
+      function nowStamp() {
+        return new Date().toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
+      }
+
+      const DEMO = {
+        // DemoCo: strongest early signal, still NOT decision-ready (alpha < .70)
+        democo: {
+          source: "verified",
+          updated_at: nowStamp(),
+          reliability: { band: "amber", alpha: 0.68, tier3_n: 280, status: "Emerging Signal" },
+          tier3: { r2: 0.24, n: 280 },
+          legacy: { r2: 0.09, n: 310, note: "Legacy is directional and typically noisier than Tier-3 at this stage." },
+          details: [
+            { name: "Trust", source: "Tier-3", r2: 0.24, n: 280 },
+            { name: "Clarity", source: "Tier-3", r2: 0.19, n: 276 },
+            { name: "Motivation", source: "Tier-3", r2: 0.14, n: 274 },
+            { name: "Click rate", source: "Legacy", r2: 0.09, n: 310 },
+            { name: "Open rate", source: "Legacy", r2: 0.05, n: 310 }
+          ],
+          kpi: {
+            baseline_label: "Primary KPI (last 30 days)",
+            baseline_value: 0.034, // 3.4%
+            primary_kpi: "click_rate",
+            fallback_used: false,
+            total_responses: 280,
+            primary_drivers: [
+              // Keep Trust high to align with Actions page narrative
+              { name: "Trust", band: "yellow", alpha: 0.68, sample_size: 280, driver_score: 0.78, normalized_gap: 0.35, current_score: 6.1 }
+            ]
+          }
+        },
+
+        // HubSpot: emerging, Tier-3 slightly weaker than DemoCo; legacy weaker still
+        hubspot: {
+          source: "verified",
+          updated_at: nowStamp(),
+          reliability: { band: "amber", alpha: 0.64, tier3_n: 120, status: "Emerging Signal" },
+          tier3: { r2: 0.16, n: 120 },
+          legacy: { r2: 0.07, n: 260, note: "Legacy metrics are present but typically underpowered early on." },
+          details: [
+            { name: "Clarity", source: "Tier-3", r2: 0.16, n: 118 },
+            { name: "Trust", source: "Tier-3", r2: 0.12, n: 116 },
+            { name: "Motivation", source: "Tier-3", r2: 0.10, n: 114 },
+            { name: "Click rate", source: "Legacy", r2: 0.07, n: 260 },
+            { name: "Open rate", source: "Legacy", r2: 0.04, n: 260 }
+          ],
+          kpi: {
+            baseline_label: "Primary KPI (last 30 days)",
+            baseline_value: 0.027,
+            primary_kpi: "click_rate",
+            fallback_used: false,
+            total_responses: 120,
+            primary_drivers: [
+              { name: "Clarity", band: "yellow", alpha: 0.64, sample_size: 120, driver_score: 0.62, normalized_gap: 0.41, current_score: 4.1 }
+            ]
+          }
+        },
+
+        // Salesforce: learning mode (low n, alpha < .70). Still show BOTH Tier-3 + legacy (weak).
+        salesforce: {
+          source: "synthetic",
+          updated_at: nowStamp(),
+          reliability: { band: "gray", alpha: 0.55, tier3_n: 42, status: "Learning Mode" },
+          tier3: { r2: 0.08, n: 42 },
+          legacy: { r2: 0.05, n: 240, note: "Learning mode: treat all relationships as directional until Tier-3 volume grows." },
+          details: [
+            { name: "Trust", source: "Tier-3", r2: 0.08, n: 42 },
+            { name: "Clarity", source: "Tier-3", r2: 0.06, n: 41 },
+            { name: "Motivation", source: "Tier-3", r2: 0.05, n: 40 },
+            { name: "Click rate", source: "Legacy", r2: 0.05, n: 240 },
+            { name: "Open rate", source: "Legacy", r2: 0.03, n: 240 }
+          ],
+          kpi: {
+            baseline_label: "Primary KPI (last 30 days)",
+            baseline_value: null,
+            primary_kpi: "click_rate",
+            fallback_used: true,
+            total_responses: 42,
+            primary_drivers: [
+              { name: "Collect more Tier-3", band: "gray", alpha: 0.55, sample_size: 42, driver_score: 0.20, normalized_gap: 0.00, current_score: null }
+            ]
+          }
+        },
+
+        // All orgs: aggregate, still emerging (alpha < .70), Tier-3 > legacy
+        all: {
+          source: "verified",
+          updated_at: nowStamp(),
+          reliability: { band: "amber", alpha: 0.65, tier3_n: 150, status: "Emerging Signal" },
+          tier3: { r2: 0.20, n: 150 },
+          legacy: { r2: 0.08, n: 810, note: "Aggregate demo scope: legacy is broad but not strongly predictive." },
+          details: [
+            { name: "Trust", source: "Tier-3", r2: 0.20, n: 150 },
+            { name: "Clarity", source: "Tier-3", r2: 0.16, n: 148 },
+            { name: "Motivation", source: "Tier-3", r2: 0.12, n: 147 },
+            { name: "Click rate", source: "Legacy", r2: 0.08, n: 810 },
+            { name: "Open rate", source: "Legacy", r2: 0.04, n: 810 }
+          ],
+          kpi: {
+            baseline_label: "Primary KPI (last 30 days)",
+            baseline_value: 0.031,
+            primary_kpi: "click_rate",
+            fallback_used: false,
+            total_responses: 150,
+            primary_drivers: [
+              { name: "Trust", band: "yellow", alpha: 0.65, sample_size: 150, driver_score: 0.70, normalized_gap: 0.28, current_score: 5.2 }
+            ]
+          }
+        }
+      };
+
+      // ─────────────────────────────────────────────────────────────
+      // DOM
+      // ─────────────────────────────────────────────────────────────
+      const orgPills = document.querySelectorAll(".org-pill");
+      const campaignInput = document.getElementById("campaignInput");
+      const campaignButton = document.getElementById("campaignButton");
+
+      const tier3R2El = document.getElementById("tier3R2");
+      const tier3NEl = document.getElementById("tier3N");
+      const tier3BarEl = document.getElementById("tier3Bar");
+      const tier3R2LabelEl = document.getElementById("tier3R2Label");
+      const tier3BandBadge = document.getElementById("tier3BandBadge");
+      const tier3ReliabilityMetaEl = document.getElementById("tier3ReliabilityMeta");
+
+      const legacyR2El = document.getElementById("legacyR2");
+      const legacyNEl = document.getElementById("legacyN");
+      const legacyBarEl = document.getElementById("legacyBar");
+      const legacyR2LabelEl = document.getElementById("legacyR2Label");
+      const legacyBandBadge = document.getElementById("legacyBandBadge");
+      const legacyNoteEl = document.getElementById("legacyNote");
+
+      const metaCampaignEl = document.getElementById("metaCampaign");
+      const lastUpdatedEl = document.getElementById("lastUpdated");
+      const detailsBody = document.getElementById("detailsBody");
+
+      const reliabilityBandBadge = document.getElementById("reliabilityBandBadge");
+      const reliabilityStatusEl = document.getElementById("reliabilityStatus");
+      const reliabilityMetaEl = document.getElementById("reliabilityMeta");
+
+      const dataIntegrityDot = document.getElementById("dataIntegrityDot");
+      const dataIntegrityText = document.getElementById("dataIntegrityText");
+
+      const kpiSummaryEl = document.getElementById("kpiSummary");
+      const kpiLiftRangeEl = document.getElementById("kpiLiftRange");
+      const kpiBaselineEl = document.getElementById("kpiBaseline");
+      const kpiDriverStrengthEl = document.getElementById("kpiDriverStrength");
+      const kpiSegmentShiftEl = document.getElementById("kpiSegmentShift");
+      const kpiTierUpliftEl = document.getElementById("kpiTierUplift");
+      const kpiRunSimBtn = document.getElementById("kpiRunSimulation");
+
+      let activeOrg = "democo";
+      let activeCampaign = "All";
+      let currentDriver = null;
+      let currentKpi = "click_rate";
+
+      // ─────────────────────────────────────────────────────────────
+      // Helpers
+      // ─────────────────────────────────────────────────────────────
+      function formatR2(value) {
+        if (value == null || isNaN(value)) return "—";
+        return value.toFixed(3).replace(/^0+/, "");
+      }
+      function formatInt(value) {
+        if (value == null || isNaN(value)) return "—";
+        return Number(value).toLocaleString();
+      }
+      function pct(value) {
+        if (value == null || !isFinite(value)) return "—";
+        return (value * 100).toFixed(1) + "%";
+      }
+
+      const bandColors = {
+        green: { bg: "bg-emerald-500/20 border border-emerald-400/70 text-emerald-200", dot: "bg-emerald-400" },
+        amber: { bg: "bg-amber-500/20 border border-amber-400/80 text-amber-200", dot: "bg-amber-400" },
+        red:   { bg: "bg-rose-500/20 border border-rose-400/80 text-rose-200", dot: "bg-rose-400" },
+        gray:  { bg: "bg-slate-700/40 border border-slate-500/80 text-slate-200", dot: "bg-slate-300" }
+      };
+
+      function bandForR2(r2) {
+        if (r2 == null || isNaN(r2)) return "gray";
+        if (r2 >= 0.25) return "green";
+        if (r2 >= 0.10) return "amber";
+        return "red";
+      }
+
+      function describeBand(band) {
+        if (band === "green") return "Decision-Ready";
+        if (band === "amber") return "Emerging Signal";
+        if (band === "red") return "Weak / Directional Only";
+        return "Unknown";
+      }
+
+      function applyBandBadge(el, band, label) {
+        const b = bandColors[band] || bandColors.gray;
+        el.className = "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium uppercase tracking-wide " + b.bg;
+        el.innerHTML = '<span class="h-2 w-2 rounded-full ' + b.dot + '"></span><span>' + label + "</span>";
+      }
+
+      function setOrgPillsUI() {
+        orgPills.forEach(function (pill) {
+          pill.classList.remove("org-pill-active","bg-emerald-500","text-slate-950","shadow-sm","shadow-emerald-500/40");
+          pill.classList.add("text-slate-200");
+          if ((pill.dataset.org || "democo") === activeOrg) {
+            pill.classList.add("org-pill-active","bg-emerald-500","text-slate-950","shadow-sm","shadow-emerald-500/40");
+            pill.classList.remove("text-slate-200");
+          }
+        });
+      }
+
+      function updateDataIntegrityBadge(band, total, fallbackUsed) {
+        let base = band === "green" ? 0.9 : band === "amber" ? 0.7 : 0.5;
+        if (total >= 400) base += 0.05;
+        else if (total < 50) base -= 0.15;
+        if (fallbackUsed) base = Math.min(base, 0.4);
+
+        const confidence = Math.max(0.1, Math.min(0.99, base));
+        const pctConf = Math.round(confidence * 100);
+
+        const sourceLabel = fallbackUsed ? "Synthetic / Theory Seed" : "Verified Tier-3";
+        dataIntegrityText.textContent = sourceLabel + " · " + pctConf + "% confidence";
+
+        if (confidence >= 0.8) dataIntegrityDot.className = "h-1.5 w-1.5 rounded-full bg-emerald-400";
+        else if (confidence >= 0.6) dataIntegrityDot.className = "h-1.5 w-1.5 rounded-full bg-amber-300";
+        else dataIntegrityDot.className = "h-1.5 w-1.5 rounded-full bg-slate-400";
+      }
+
+      function updateBars(tier3R2, legacyR2) {
+        const t = !isNaN(tier3R2) && tier3R2 != null ? tier3R2 : 0;
+        const l = !isNaN(legacyR2) && legacyR2 != null ? legacyR2 : 0;
+        tier3BarEl.style.width = Math.max(0, Math.min(100, t * 100)) + "%";
+        legacyBarEl.style.width = Math.max(0, Math.min(100, l * 100)) + "%";
+      }
+
+      function renderDetails(details) {
+        if (!Array.isArray(details) || details.length === 0) {
+          detailsBody.innerHTML = '<tr><td colspan="5" class="px-3 py-4 text-center text-slate-400">No construct-level predictive data available yet.</td></tr>';
+          return;
+        }
+
+        detailsBody.innerHTML = details.map(function (row) {
+          const r2 = typeof row.r2 === "number" ? row.r2 : null;
+          const n = row.n != null ? row.n : null;
+          const band = bandForR2(r2);
+          const b = bandColors[band] || bandColors.gray;
+          const bandLabel = band === "green" ? "Strong" : band === "amber" ? "Emerging" : band === "red" ? "Weak" : "Unknown";
+
+          return (
+            "<tr>" +
+              '<td class="px-3 py-2 text-slate-100">' + (row.name || "—") + "</td>" +
+              '<td class="px-3 py-2 text-slate-300">' + (row.source || "—") + "</td>" +
+              '<td class="px-3 py-2 text-right text-slate-100 tabular-nums">' + formatR2(r2) + "</td>" +
+              '<td class="px-3 py-2 text-right">' +
+                '<span class="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] ' + b.bg + ' border text-slate-100">' +
+                  '<span class="h-2 w-2 rounded-full ' + b.dot + '"></span>' + bandLabel +
+                "</span>" +
+              "</td>" +
+              '<td class="px-3 py-2 text-right text-slate-300 tabular-nums">' + formatInt(n) + "</td>" +
+            "</tr>"
+          );
+        }).join("");
+      }
+
+      function updateMetaCampaign(label) {
+        metaCampaignEl.innerHTML = 'Campaign scope: <span class="font-medium text-sky-300">' + (label || "All") + "</span>";
+      }
+
+      function updateLastUpdated(ts) {
+        lastUpdatedEl.textContent = "Last updated: " + (ts || "—");
+      }
+
+      function computeLiftFromDriverScore(driverScore, band, fallbackUsed) {
+        const s = Math.max(0, Math.min(1, driverScore || 0));
+        let base = 0.03 + 0.20 * s; // 3%–23% center-ish
+
+        if (band === "amber") base *= 0.7;
+        if (band === "gray") base *= 0.4;
+        if (fallbackUsed) base *= 0.6;
+
+        const conservative = Math.max(0.005, base * 0.5);
+        const stretch = Math.min(0.60, base * 1.8);
+
+        return { conservative, stretch, segShift: 0.10 * s, tierUplift: 0.15 * s };
+      }
+
+      // ─────────────────────────────────────────────────────────────
+      // Render
+      // ─────────────────────────────────────────────────────────────
+      function render() {
+        const bundle = DEMO[activeOrg] || DEMO.democo;
+
+        const campaignLabel = (activeCampaign && activeCampaign.trim()) ? activeCampaign.trim() : "All";
+        updateMetaCampaign(campaignLabel);
+
+        // Reliability
+        const rel = bundle.reliability || { band: "gray", alpha: null, tier3_n: null, status: "Learning Mode" };
+        applyBandBadge(reliabilityBandBadge, rel.band, rel.status || describeBand(rel.band));
+        reliabilityStatusEl.textContent = "Reliability status: " + (rel.status || "Learning Mode");
+        reliabilityMetaEl.textContent = "Cronbach’s α: " + (rel.alpha != null ? rel.alpha.toFixed(2) : "—") + " · Tier-3 n: " + formatInt(rel.tier3_n);
+
+        // Tier-3 summary
+        const tier3Band = rel.band || bandForR2(bundle.tier3 && bundle.tier3.r2);
+        applyBandBadge(tier3BandBadge, tier3Band, describeBand(tier3Band));
+        const tR2 = bundle.tier3 ? bundle.tier3.r2 : null;
+        const tN  = bundle.tier3 ? bundle.tier3.n  : null;
+
+        tier3R2El.textContent = formatR2(tR2);
+        tier3R2LabelEl.textContent = formatR2(tR2);
+        tier3NEl.textContent = "n = " + formatInt(tN);
+        tier3ReliabilityMetaEl.textContent =
+          "Reliability: Cronbach’s α " +
+          (rel.alpha != null ? rel.alpha.toFixed(2) : "—") +
+          " · n = " + formatInt(rel.tier3_n) +
+          (tier3Band === "green" ? " (Decision-Ready)" : tier3Band === "amber" ? " (Emerging signal)" : " (Learning mode)");
+
+        // Legacy summary (now shown for ALL orgs in demo)
+        const lR2 = bundle.legacy ? bundle.legacy.r2 : null;
+        const lN  = bundle.legacy ? bundle.legacy.n : null;
+        const legacyBand = bandForR2(lR2);
+
+        applyBandBadge(legacyBandBadge, legacyBand, describeBand(legacyBand));
+        legacyR2El.textContent = formatR2(lR2);
+        legacyR2LabelEl.textContent = formatR2(lR2);
+        legacyNEl.textContent = "n = " + formatInt(lN);
+        legacyNoteEl.textContent = (bundle.legacy && bundle.legacy.note) ? bundle.legacy.note : "";
+
+        // Bars
+        updateBars(tR2, lR2);
+
+        // Table
+        renderDetails(bundle.details || []);
+
+        // Updated stamp
+        updateLastUpdated(bundle.updated_at || nowStamp());
+
+        // Data integrity badge
+        const total = (bundle.kpi && typeof bundle.kpi.total_responses === "number") ? bundle.kpi.total_responses : (rel.tier3_n || 0);
+        const fallbackUsed = !!(bundle.kpi && bundle.kpi.fallback_used) || bundle.source === "synthetic";
+        updateDataIntegrityBadge(rel.band || "gray", total, fallbackUsed);
+
+        // KPI predictor
+        const k = bundle.kpi || {};
+        const drivers = Array.isArray(k.primary_drivers) ? k.primary_drivers.slice() : [];
+        const baselineValue = typeof k.baseline_value === "number" ? k.baseline_value : null;
+        const baselineLabel = k.baseline_label || "Primary KPI (last 30 days)";
+        currentKpi = (k.primary_kpi || "click_rate").toString().toLowerCase();
+
+        if (baselineValue != null) kpiBaselineEl.textContent = pct(baselineValue) + " (" + baselineLabel + ")";
+        else kpiBaselineEl.textContent = baselineLabel;
+
+        if (!drivers.length) {
+          kpiSummaryEl.textContent = "VeriTechIQ needs more Tier-3 responses before estimating KPI impact for this scope.";
+          kpiLiftRangeEl.textContent = "—";
+          kpiDriverStrengthEl.textContent = "—";
+          kpiSegmentShiftEl.textContent = "—";
+          kpiTierUpliftEl.textContent = "—";
+          kpiRunSimBtn.disabled = true;
+          kpiRunSimBtn.classList.add("opacity-50","cursor-not-allowed");
+          kpiRunSimBtn.onclick = null;
+          currentDriver = null;
+          return;
+        }
+
+        drivers.sort(function(a,b){
+          const sa = typeof a.driver_score === "number" ? a.driver_score : 0;
+          const sb = typeof b.driver_score === "number" ? b.driver_score : 0;
+          return sb - sa;
+        });
+
+        const main = drivers[0];
+        currentDriver = main.name || "Key Driver";
+
+        const band = rel.band || "gray";
+        const lift = computeLiftFromDriverScore(main.driver_score || 0, band, fallbackUsed);
+
+        kpiLiftRangeEl.textContent = pct(lift.conservative) + " – " + pct(lift.stretch);
+        kpiDriverStrengthEl.textContent =
+          "score ≈ " + (typeof main.driver_score === "number" ? main.driver_score.toFixed(2) : "—") +
+          (typeof main.normalized_gap === "number" ? " · gap ≈ " + main.normalized_gap.toFixed(2) : "");
+        kpiSegmentShiftEl.textContent = "+" + pct(lift.segShift);
+        kpiTierUpliftEl.textContent = "+" + pct(lift.tierUplift);
+
+        const meanText = (typeof main.current_score === "number") ? (" currently averaging ~" + main.current_score.toFixed(1) + " (1–7).") : "";
+        const reliabilityNote =
+          fallbackUsed
+            ? "Because this org is using a seeded demo default (low Tier-3 volume), treat this as directional."
+            : (band === "green" ? "Reliability is green — this window can inform KPI planning." : "Reliability is not fully green — treat as directional while collecting more Tier-3.");
+
+        kpiSummaryEl.textContent =
+          "For " + baselineLabel + " in " + (campaignLabel || "this scope") + ", VeriTechIQ identifies " + currentDriver +
+          meanText + " If you improve this driver meaningfully (e.g., +0.3–0.5 points), VeriTechIQ estimates a " +
+          pct(lift.conservative) + "–" + pct(lift.stretch) + " lift window across that KPI. " + reliabilityNote;
+
+        // Enable simulation link (demo)
+        kpiRunSimBtn.disabled = false;
+        kpiRunSimBtn.classList.remove("opacity-50","cursor-not-allowed");
+        kpiRunSimBtn.onclick = function () {
+          const params = new URLSearchParams();
+          if (currentDriver) params.set("driver", currentDriver);
+          if (currentKpi) params.set("kpi", currentKpi);
+          if (campaignLabel && campaignLabel.toLowerCase() !== "all") params.set("campaign", campaignLabel);
+          params.set("org", activeOrg);
+
+          // ✅ MVP demo link (local file)
+          window.open("./roi_simulation.html?" + params.toString(), "_blank");
+        };
+      }
+
+      // ─────────────────────────────────────────────────────────────
+      // Events
+      // ─────────────────────────────────────────────────────────────
+      orgPills.forEach(function (pill) {
+        pill.addEventListener("click", function () {
+          activeOrg = pill.dataset.org || "democo";
+          setOrgPillsUI();
+          render();
+        });
+      });
+
+      campaignButton.addEventListener("click", function () {
+        activeCampaign = (campaignInput.value || "").trim() || "All";
+        render();
+      });
+
+      campaignInput.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          activeCampaign = (campaignInput.value || "").trim() || "All";
+          render();
+        }
+      });
+
+      // Initial
+      setOrgPillsUI();
+      render();
+    })();
+  </script>
+
+  <!-- Notes / footer (keep it light for demo) -->
+  <div class="mt-16 pt-8 border-t border-slate-800 text-[11px] leading-relaxed text-slate-400 max-w-5xl mx-auto px-4 pb-10">
+    <p class="font-semibold text-slate-200 mb-2">
+      VeriTechIQ Verified Engagement Intelligence — Demo Notes
+    </p>
+    <p class="mt-2">
+      This demo page renders from a local dataset (no live API calls) to ensure stability during investor review.
+      In production, predictive metrics are computed from verified engagement events + Tier-3 responses with reliability gating.
+    </p>
+
+    <div class="w-full flex flex-col items-center mt-8 pt-6 border-t border-slate-800">
+      <p class="text-[10px] tracking-wide uppercase font-semibold text-slate-300">
+        VeriTechIQ™ Verified Engagement Intelligence
+      </p>
+      <p class="text-[10px] text-slate-500 mt-1">
+        © 2025 VeriTechIQ. All rights reserved.
+      </p>
+    </div>
+  </div>
+</body>
+</html>

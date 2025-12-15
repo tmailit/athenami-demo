@@ -1,0 +1,971 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VeriTechIQ · VEI v2</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <style>
+    /* Ensure the chart never overflows its card */
+    .chart-wrap { height: 260px; }
+    @media (min-width: 1024px) { .chart-wrap { height: 280px; } }
+    canvas { display: block; }
+  </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900">
+
+  <!-- 🔹 Simple Nav: this is the main VEI v2 "Home" -->
+  <nav class="w-full bg-white/95 border-b border-gray-200 px-6 py-3 flex items-center justify-between sticky top-0 z-20 backdrop-blur">
+    <div class="flex items-center gap-3">
+      <!-- Owl mark (inline SVG; matches your index vibe without external assets) -->
+      <div class="h-8 w-8 rounded-xl bg-gray-900 flex items-center justify-center shadow-sm">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="8.5" cy="10" r="3.2" fill="#fff"/>
+          <circle cx="15.5" cy="10" r="3.2" fill="#fff"/>
+          <circle cx="8.5" cy="10" r="1.4" fill="#111827"/>
+          <circle cx="15.5" cy="10" r="1.4" fill="#111827"/>
+          <path d="M12 12.3l2.2 2.3L12 16.2 9.8 14.6 12 12.3z" fill="#10B981"/>
+        </svg>
+      </div>
+
+      <div>
+        <div class="text-[15px] font-semibold tracking-tight text-gray-900 leading-none">
+          VeriTechIQ™ Dashboard
+        </div>
+        <div class="text-[11px] text-gray-500 leading-none mt-1">
+          Verified Engagement Intelligence · Demo environment
+        </div>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-5 text-sm">
+      <a href="./actions.html" class="text-gray-700 hover:text-black">
+        Action Engine
+      </a>
+      <a href="./predictive.html" class="text-gray-700 hover:text-black">
+        Predictive Strength
+      </a>
+    </div>
+  </nav>
+
+  <div class="max-w-5xl mx-auto p-6">
+    <header class="mb-6">
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <!-- Left: title + description -->
+        <div>
+          <h1 class="text-2xl font-semibold text-gray-900">
+            Verified Engagement Intelligence
+          </h1>
+          <p class="text-sm text-gray-500">
+            MVP dashboard · Demo data only · Scores shown on a 1–7 directional scale.
+          </p>
+        </div>
+
+        <!-- Right: Org selector -->
+        <div class="flex flex-col items-end gap-2">
+          <div class="flex items-center gap-3">
+            <span class="text-xs font-semibold uppercase tracking-wide text-gray-500">
+              Org
+            </span>
+
+            <div
+              id="orgSelector"
+              class="inline-flex items-center rounded-full border border-gray-300 bg-white p-1 text-xs font-medium shadow-sm"
+            >
+              <!-- DemoCo (default) -->
+              <button
+                type="button"
+                class="org-pill org-pill-active rounded-full px-3 py-1 text-[11px] tracking-wide text-gray-700 bg-sky-600 text-white shadow-sm shadow-sky-500/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/70 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-50"
+                data-org="democo"
+              >
+                DemoCo
+              </button>
+
+              <!-- HubSpot clone -->
+              <button
+                type="button"
+                class="org-pill rounded-full px-3 py-1 text-[11px] tracking-wide text-gray-700 hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/70 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-50"
+                data-org="hubspot"
+              >
+                HubSpot
+              </button>
+
+              <!-- Salesforce clone -->
+              <button
+                type="button"
+                class="org-pill rounded-full px-3 py-1 text-[11px] tracking-wide text-gray-700 hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/70 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-50"
+                data-org="salesforce"
+              >
+                Salesforce
+              </button>
+
+              <!-- All orgs (pooled view) -->
+              <button
+                type="button"
+                class="org-pill rounded-full px-3 py-1 text-[11px] tracking-wide text-gray-700 hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/70 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-50"
+                data-org="all"
+              >
+                All orgs
+              </button>
+            </div>
+          </div>
+
+          <div class="text-[11px] text-gray-400">
+            Switching orgs updates VEI, 3+1 scores, and wallet summary below.
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Filters -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div class="bg-white rounded-xl p-4 ring-1 ring-black/5">
+        <label class="text-xs uppercase text-gray-500 block mb-1">Date range</label>
+        <select id="range" class="w-full border rounded-lg px-3 py-2">
+          <option value="7">Last 7 days</option>
+          <option value="14">Last 14 days</option>
+          <option value="30">Last 30 days</option>
+          <option value="90" selected>Last 90 days</option>
+        </select>
+      </div>
+
+      <div class="bg-white rounded-xl p-4 ring-1 ring-black/5">
+        <label class="text-xs uppercase text-gray-500 block mb-1">Campaign (optional)</label>
+        <input id="campaign" placeholder="e.g., vip" class="w-full border rounded-lg px-3 py-2" />
+      </div>
+
+      <div class="bg-white rounded-xl p-4 ring-1 ring-black/5">
+        <label class="text-xs uppercase text-gray-500 block mb-1">Tier (optional)</label>
+        <select id="tier" class="w-full border rounded-lg px-3 py-2">
+          <option value="">All tiers</option>
+          <option value="1">Tier 1 · Human Verify</option>
+          <option value="2">Tier 2 · Open Text</option>
+          <option value="3">Tier 3 · 3+1 Survey</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Engagement + KPIs -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+      <!-- Engagement chart -->
+      <div class="bg-white rounded-xl p-5 ring-1 ring-black/5 lg:col-span-2">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <h2 class="text-sm font-semibold">Engagement Score (avg)</h2>
+            <p id="engagementSubtitle" class="text-[11px] text-gray-400 mt-0.5">
+              Weekly VEI-style engagement index · DemoCo · Last 12 weeks
+            </p>
+          </div>
+          <button id="refreshBtn" class="text-xs px-3 py-1.5 rounded-lg bg-gray-900 text-white hover:bg-black">
+            Refresh
+          </button>
+        </div>
+
+        <div class="chart-wrap">
+          <canvas id="engagementChart"></canvas>
+        </div>
+
+        <p class="text-[11px] text-gray-400 mt-3">
+          Each point represents average 1–7 engagement scores from verified Tier-3 respondents in that week.
+        </p>
+      </div>
+
+      <!-- Psychographic KPIs card -->
+      <div class="bg-white rounded-xl p-5 ring-1 ring-black/5">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <h2 class="text-sm font-semibold mb-1">Psychographic KPIs</h2>
+            <p class="text-[11px] text-gray-400 leading-snug">
+              All KPIs are 1–7 directional scores based on verified Tier-3 responses (3+1 framework).
+            </p>
+          </div>
+
+          <!-- ONE badge only (no duplicates) -->
+          <div
+            id="confidenceBadge"
+            class="shrink-0 inline-flex items-center gap-2 rounded-full bg-gray-900 text-white px-2.5 py-1 text-[10px] font-semibold tracking-wide uppercase whitespace-nowrap max-w-full overflow-hidden text-ellipsis"
+            title="Summarizes data integrity for this view: whether KPIs are based on verified Tier-3 responses vs synthetic defaults, plus a heuristic confidence score using reliability band, sample size, and fallback status."
+          >
+            <span id="confidenceDot" class="h-1.5 w-1.5 rounded-full bg-gray-400"></span>
+            <span>Verified</span>
+            <span id="confidenceValue">—% confidence</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mt-4">
+          <div>
+            <div class="flex items-center gap-1 text-xs text-gray-500">
+              <span>VEI</span>
+              <span
+                class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-gray-300 text-[10px] cursor-default"
+                title="VEI (Verified Engagement Index) is the composite of the 3+1 drivers, on a 1–7 scale."
+              >
+                ?
+              </span>
+            </div>
+            <div id="kpi-vei" class="text-2xl font-semibold mt-0.5">—</div>
+          </div>
+
+          <div>
+            <div class="flex items-center gap-1 text-xs text-gray-500">
+              <span>Trust</span>
+              <span
+                class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-gray-300 text-[10px] cursor-default"
+                title="Perceived credibility, safety, and confidence in the offer, on a 1–7 scale."
+              >
+                ?
+              </span>
+            </div>
+            <div id="kpi-trust" class="text-2xl font-semibold mt-0.5">—</div>
+          </div>
+
+          <div>
+            <div class="flex items-center gap-1 text-xs text-gray-500">
+              <span>Advocacy</span>
+              <span
+                class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-gray-300 text-[10px] cursor-default"
+                title="Likelihood to act, recommend, or move the opportunity forward, on a 1–7 scale."
+              >
+                ?
+              </span>
+            </div>
+            <div id="kpi-advocacy" class="text-2xl font-semibold mt-0.5">—</div>
+          </div>
+
+          <div>
+            <div class="flex items-center gap-1 text-xs text-gray-500">
+              <span>Relevance</span>
+              <span
+                class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-gray-300 text-[10px] cursor-default"
+                title="Perceived clarity, fit, and ‘this is for me’ signal, on a 1–7 scale."
+              >
+                ?
+              </span>
+            </div>
+            <div id="kpi-relevance" class="text-2xl font-semibold mt-0.5">—</div>
+          </div>
+        </div>
+
+        <div class="mt-4 rounded-xl border border-gray-200 bg-gray-50 px-3 py-3">
+          <div class="text-[11px] text-gray-500 leading-snug space-y-1">
+            <p>Based on verified Tier-3 responses for this org and scope.</p>
+            <p>
+              Confidence mirrors the Predictive Strength view by combining reliability band, sample size, and
+              whether any theory-based defaults are in play.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Narrative highlight tiles driven off psychographics -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+      <!-- Top Driver -->
+      <div class="bg-white rounded-xl p-4 ring-1 ring-black/5 border-l-4 border-emerald-200">
+        <div class="text-[11px] font-semibold tracking-wide uppercase text-gray-400 mb-1">
+          Top Driver (Predictive)
+        </div>
+        <p id="top-driver-headline" class="text-sm font-semibold text-gray-900 mb-1">
+          Waiting for data…
+        </p>
+        <p id="top-driver-body" class="text-xs text-gray-500 leading-relaxed">
+          Once Tier-3 data is available, VeriTechIQ highlights the strongest driver of engagement for this org.
+        </p>
+      </div>
+
+      <!-- Audience Insight -->
+      <div class="bg-white rounded-xl p-4 ring-1 ring-black/5 border-l-4 border-sky-200">
+        <div class="text-[11px] font-semibold tracking-wide uppercase text-gray-400 mb-1">
+          Audience Insight
+        </div>
+        <p id="audience-headline" class="text-sm font-semibold text-gray-900 mb-1">
+          Segmentation loading…
+        </p>
+        <p id="audience-body" class="text-xs text-gray-500 leading-relaxed">
+          Psychographic personas summarize how this audience tends to decide, beyond opens and clicks.
+        </p>
+      </div>
+
+      <!-- Recommended Focus -->
+      <div class="bg-white rounded-xl p-4 ring-1 ring-black/5 border-l-4 border-amber-200">
+        <div class="text-[11px] font-semibold tracking-wide uppercase text-gray-400 mb-1">
+          Recommended Focus
+        </div>
+        <p id="focus-headline" class="text-sm font-semibold text-gray-900 mb-1">
+          Test one change at a time.
+        </p>
+        <p id="focus-body" class="text-xs text-gray-500 leading-relaxed">
+          The Action Engine translates these drivers and segments into concrete experiments with expected lift.
+        </p>
+      </div>
+    </section>
+
+    <!-- Wallet + Reward row -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6" id="wallet-row">
+      <!-- Live wallet summary (demo-synthesized) -->
+      <div class="bg-white rounded-xl p-5 ring-1 ring-black/5">
+        <div class="flex items-start justify-between gap-4 mb-3">
+          <div>
+            <h2 class="text-sm font-semibold">VeriTechIQ Wallet · Live Summary (Demo)</h2>
+            <p class="text-[11px] text-gray-400 mt-0.5">
+              Client: <span id="wallet-client" class="text-gray-600">—</span>
+            </p>
+          </div>
+          <div class="text-right">
+            <div class="text-[11px] uppercase tracking-wide text-gray-400">Net balance</div>
+            <div id="wallet-balance" class="text-3xl font-semibold leading-tight">$0.00</div>
+            <div class="text-[10px] text-gray-400 mt-0.5">Demo ledger only (synthetic)</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 text-sm">
+          <div class="rounded-xl border border-gray-200 bg-gray-50 px-3 py-3">
+            <div class="text-[11px] uppercase tracking-wide text-gray-500">Funded</div>
+            <div id="wallet-funded" class="font-semibold mt-1">$0.00</div>
+          </div>
+          <div class="rounded-xl border border-gray-200 bg-gray-50 px-3 py-3">
+            <div class="text-[11px] uppercase tracking-wide text-gray-500">Rewards</div>
+            <div id="wallet-rewards" class="font-semibold mt-1">$0.00</div>
+          </div>
+          <div class="rounded-xl border border-gray-200 bg-gray-50 px-3 py-3">
+            <div class="text-[11px] uppercase tracking-wide text-gray-500">Fees (10%)</div>
+            <div id="wallet-fees" class="font-semibold mt-1">$0.00</div>
+          </div>
+          <div class="rounded-xl border border-gray-200 bg-gray-50 px-3 py-3">
+            <div class="text-[11px] uppercase tracking-wide text-gray-500">Transactions (90d)</div>
+            <div id="wallet-tx-count" class="font-semibold mt-1">0</div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between text-[11px] text-gray-500 mt-3">
+          <span>Last transaction</span>
+          <span id="wallet-last-tx">—</span>
+        </div>
+
+        <p class="mt-3 text-xs text-gray-500 leading-relaxed">
+          This summary uses the VeriTechIQ Wallet service for this org to illustrate how budget is funded,
+          deployed as rewards, and what remains available to drive future engagement.
+        </p>
+
+        <div class="mt-4 flex justify-center">
+          <button
+            type="button"
+            class="px-4 py-1.5 rounded-full border border-gray-300 text-xs font-medium text-gray-700 hover:bg-gray-50"
+            onclick="alert('Demo only – in production this would trigger a small test fund via Stripe or your finance system.')"
+          >
+            + $100 Test Fund (demo)
+          </button>
+        </div>
+      </div>
+
+      <!-- Reward Policy card -->
+      <div class="bg-white rounded-xl p-5 ring-1 ring-black/5">
+        <div class="flex items-start justify-between mb-2">
+          <div>
+            <h2 class="text-sm font-semibold">
+              Reward Policy (Effective)
+            </h2>
+            <p class="text-[11px] text-gray-400 leading-snug mt-0.5">
+              Demo policy used in this MVP: fixed per-response rewards by tier and a 10% VeriTechIQ fee.
+            </p>
+          </div>
+        </div>
+
+        <!-- Tier grid -->
+        <div class="grid grid-cols-3 gap-4 mt-3 text-sm">
+          <div>
+            <div class="text-[11px] font-semibold uppercase tracking-wide text-gray-500 mb-0.5">
+              Tier 1
+            </div>
+            <div class="text-xl font-semibold mb-0.5">$0.20</div>
+            <p class="text-[11px] text-gray-500 mb-1">
+              One-click acknowledgements and human verification.
+            </p>
+            <p id="tier1-count" class="text-[11px] text-gray-700 font-medium"></p>
+          </div>
+
+          <div>
+            <div class="text-[11px] font-semibold uppercase tracking-wide text-gray-500 mb-0.5">
+              Tier 2
+            </div>
+            <div class="text-xl font-semibold mb-0.5">$0.80</div>
+            <p class="text-[11px] text-gray-500 mb-1">
+              Short-form open text to surface friction and clarity issues.
+            </p>
+            <p id="tier2-count" class="text-[11px] text-gray-700 font-medium"></p>
+          </div>
+
+          <div>
+            <div class="text-[11px] font-semibold uppercase tracking-wide text-gray-500 mb-0.5">
+              Tier 3
+            </div>
+            <div class="text-xl font-semibold mb-0.5">$1.60</div>
+            <p class="text-[11px] text-gray-500 mb-1">
+              Full 3+1 survey (Trust, Relevance, Advocacy, ROI Intent).
+            </p>
+            <p id="tier3-count" class="text-[11px] text-gray-700 font-medium"></p>
+          </div>
+        </div>
+
+        <!-- Visual balance + explanatory note -->
+        <div class="mt-5 rounded-xl border border-gray-200 bg-gray-50 px-3 py-3">
+          <p class="text-[11px] text-gray-600 leading-snug">
+            In production, reward rates can vary by segment, campaign type, and fatigue policy.
+            The Action Engine uses these rates to estimate incremental lift and expected cost per
+            verified response.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Enterprise guardrails + Tier-2 themes -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-8">
+      <div class="bg-white rounded-xl p-5 ring-1 ring-red-200 bg-red-50/30">
+        <div class="text-[11px] font-semibold tracking-wide uppercase text-gray-700 mb-1">
+          Enterprise Guardrails (live policy signals)
+        </div>
+        <p class="text-xs text-gray-500 mb-2">
+          High-level guidance derived from your enterprise rules: prioritize reliability and clarity before
+          simply increasing reward spend.
+        </p>
+        <p id="guardrails-body" class="text-xs text-gray-500 leading-relaxed">
+          Loading guardrails…
+        </p>
+      </div>
+
+      <div class="bg-white rounded-xl p-5 ring-1 ring-amber-200 bg-amber-50/30">
+        <div class="text-[11px] font-semibold tracking-wide uppercase text-gray-700 mb-1">
+          Recent Tier-2 Feedback (demo)
+        </div>
+        <p class="text-xs text-gray-500 mb-2">
+          Illustrative Tier-2 “open text” comments, grouped by org. In production, this will stream live from
+          the Tier-2 coding engine to keep a pulse on friction and confusion.
+        </p>
+        <p id="tier2-body" class="text-xs text-gray-500 leading-relaxed">
+          Waiting for Tier-2 themes…
+        </p>
+      </div>
+    </section>
+
+    <!-- Methodology footer (NOT a big callout card) -->
+    <footer class="mt-8 pt-6 border-t border-gray-200 text-[11px] leading-relaxed text-gray-500">
+      <p class="font-semibold text-gray-700 mb-2">
+        VeriTechIQ Verified Engagement Intelligence — Methodological Notes &amp; Disclaimers
+      </p>
+
+      <p class="mt-2">
+        VeriTechIQ™ insights, predictive metrics, psychographic profiles, and lift estimates are based on
+        statistical patterns detected in verified Tier-3 responses combined with any available engagement
+        signals received from integrated third-party platforms (e.g., HubSpot, Mailchimp, Salesforce, or
+        other CRM/ESP systems). All outputs are directional and should be interpreted within the context of
+        sample size, reliability thresholds, and data sufficiency.
+      </p>
+
+      <p class="mt-2">
+        Predictive relationships (R²) reflect statistical associations, not causal guarantees. Recommendation
+        impact and expected lift ranges are estimates derived from comparable patterns observed in similar
+        datasets and are not financial forecasts or performance guarantees.
+      </p>
+
+      <p class="mt-2">
+        Results improve as more verified responses accumulate. VeriTechIQ continuously updates reliability
+        indicators (e.g., Cronbach’s α, sample size bands) and strengthens predictive power as additional
+        Tier-3 data is collected.
+      </p>
+
+      <p class="mt-2">
+        VeriTechIQ™ does not store or process sensitive personal data unless explicitly provided by the
+        client. All integrated third-party data is processed in accordance with each provider’s permitted use
+        policies. VeriTechIQ may use anonymized and aggregated engagement data to improve predictive models,
+        psychographic intelligence, and benchmark reporting.
+      </p>
+
+      <p class="mt-2">
+        By using VeriTechIQ™, users acknowledge that insights are advisory and should be combined with
+        operational judgment, A/B testing, and professional oversight when making marketing, financial, or
+        strategic decisions.
+      </p>
+
+      <div class="w-full flex flex-col items-center mt-6 pt-4 border-t border-gray-100">
+        <p class="text-[10px] tracking-wide uppercase font-semibold text-gray-700">
+          VeriTechIQ™ Verified Engagement Intelligence
+        </p>
+        <p class="text-[10px] text-gray-400 mt-1">
+          © 2025 VeriTechIQ. All rights reserved.
+        </p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ✅ Load the Actions “bible” dataset -->
+  <script src="./static/demo_data.js"></script>
+
+  <script>
+    function qs(id){ return document.getElementById(id); }
+    const fmt1 = new Intl.NumberFormat(undefined, { maximumFractionDigits: 1 });
+    const fmtMoney = new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' });
+
+    // 🔹 Track current org (democo | hubspot | salesforce | all)
+    let currentOrg = 'democo';
+
+    // Confidence badge DOM
+    const confidenceBadge = qs('confidenceBadge');
+    const confidenceValue = qs('confidenceValue');
+    const confidenceDot = qs('confidenceDot');
+
+    // Subtitle
+    const engagementSubtitle = qs('engagementSubtitle');
+
+    // ================================
+    // ✅ Source of truth (from demo_data.js)
+    // ================================
+    function getActions(org) {
+      const src = (window.DEMO_ACTIONS_DATA || {});
+      return src[org] || src.democo || null;
+    }
+
+    // 🔹 Demo engagement time series per org (keep as-is visually; plausible differences)
+    const DEMO_ENGAGEMENT = {
+      democo: {
+        labels: ["Week 1","Week 2","Week 3","Week 4","Week 5","Week 6","Week 7","Week 8","Week 9","Week 10","Week 11","Week 12"],
+        values: [4.3,4.5,4.7,4.9,5.0,5.2,5.3,5.4,5.5,5.7,5.8,5.9]
+      },
+      hubspot: {
+        labels: ["Week 1","Week 2","Week 3","Week 4","Week 5","Week 6","Week 7","Week 8","Week 9","Week 10","Week 11","Week 12"],
+        values: [4.6,4.7,4.8,4.9,5.0,5.1,5.2,5.25,5.3,5.35,5.4,5.45]
+      },
+      salesforce: {
+        labels: ["Week 1","Week 2","Week 3","Week 4","Week 5","Week 6","Week 7","Week 8","Week 9","Week 10","Week 11","Week 12"],
+        values: [4.0,4.05,4.1,4.15,4.2,4.25,4.3,4.35,4.4,4.45,4.5,4.55]
+      },
+      all: {
+        labels: ["Week 1","Week 2","Week 3","Week 4","Week 5","Week 6","Week 7","Week 8","Week 9","Week 10","Week 11","Week 12"],
+        values: [4.4,4.5,4.6,4.7,4.8,4.9,5.0,5.05,5.1,5.2,5.25,5.3]
+      }
+    };
+
+    function params() {
+      const days = qs('range').value || '90';
+      const campaign = qs('campaign').value.trim();
+      const tier = qs('tier').value;
+      const org = currentOrg;
+      return { days, campaign, tier, org };
+    }
+
+    async function fetchEngagement() {
+      params();
+      const d = DEMO_ENGAGEMENT[currentOrg] || DEMO_ENGAGEMENT.democo;
+      return { labels: d.labels, values: d.values };
+    }
+
+    // ================================
+    // ✅ Build dashboard KPIs from Actions constructs
+    // Dashboard KPIs are: VEI, Trust, Advocacy, Relevance (1–7)
+    // We map:
+    //   Trust     -> Trust
+    //   Relevance -> Clarity (closest concept on this demo)
+    //   Advocacy  -> Motivation (closest “activation” signal on this demo)
+    //   VEI       -> average of Trust/Clarity/Motivation/ROI Intent
+    // ================================
+    async function fetchPsych() {
+      params();
+      const a = getActions(currentOrg);
+      const p = (a && a.psychographics) ? a.psychographics : {};
+      const constructs = Array.isArray(p.constructs) ? p.constructs : [];
+
+      const getMean = (label) => {
+        const hit = constructs.find(c => (c.label || '').toLowerCase() === label.toLowerCase());
+        return (hit && typeof hit.mean === 'number') ? hit.mean : null;
+      };
+
+      const trust = getMean('Trust');
+      const clarity = getMean('Clarity');
+      const motivation = getMean('Motivation');
+      const roi = getMean('ROI Intent');
+
+      const nums = [trust, clarity, motivation, roi].filter(v => typeof v === 'number');
+      const vei = nums.length ? (nums.reduce((s,v)=>s+v,0) / nums.length) : null;
+
+      const segs = Array.isArray(p.segments) ? p.segments : [];
+      const baseN = (a && a.decision && typeof a.decision.n === 'number') ? a.decision.n : 100;
+      const personas = segs.map(s => ({
+        persona_type: s.label,
+        users: Math.max(20, Math.round(baseN * (s.share || 0.5)))
+      }));
+
+      // Tier-2 theme proxy based on top recommendation title
+      const rec0 = (a && Array.isArray(a.recs) && a.recs[0]) ? (a.recs[0].title || '') : '';
+      const top_codes =
+        /proof|trust/i.test(rec0) ? [{ insight_code: 'add_social_proof' }] :
+        /clarity|simplify|promise|ask/i.test(rec0) ? [{ insight_code: 'shorten_body_copy' }] :
+        /outcome|value|roi/i.test(rec0) ? [{ insight_code: 'clarify_value_prop' }] :
+        [{ insight_code: 'clarify_value_prop' }];
+
+      const guidance = [];
+      if (a && Array.isArray(a.recs) && a.recs.length) guidance.push(a.recs[0].body);
+
+      return {
+        ok: true,
+        kpis: {
+          vei: vei,
+          trust: trust,
+          advocacy: motivation,
+          relevance: clarity
+        },
+        personas,
+        constructs: [
+          { construct: "Trust", mean_score: trust },
+          { construct: "Relevance", mean_score: clarity },
+          { construct: "Advocacy", mean_score: motivation }
+        ],
+        top_codes,
+        guidance,
+        recent: []
+      };
+    }
+
+    // ================================
+    // ✅ Confidence badge from Actions decision band (green/yellow/gray)
+    // ================================
+    async function fetchPredictiveDrivers() {
+      params();
+      const a = getActions(currentOrg);
+      const band = (a && a.decision && a.decision.band) ? String(a.decision.band).toLowerCase() : 'gray';
+      const total = (a && a.decision && typeof a.decision.n === 'number') ? a.decision.n : 0;
+
+      const dashBand = (band === 'green') ? 'green' : (band === 'yellow') ? 'amber' : 'gray';
+
+      const drivers = (a && Array.isArray(a.drivers)) ? a.drivers : [];
+      const primary_drivers = drivers.slice(0, 2).map(d => ({
+        name: d.name,
+        band: dashBand,
+        r2: d.r2
+      }));
+
+      return {
+        primary_drivers,
+        total_responses: total,
+        fallback_used: false
+      };
+    }
+
+    function clientIdForOrg(org) {
+      switch (org) {
+        case 'hubspot': return 'org_hubspot';
+        case 'salesforce': return 'org_salesforce';
+        case 'all': return 'org_pooled';
+        default: return 'org_demo';
+      }
+    }
+
+    const REWARD_RATES = { t1: 0.20, t2: 0.80, t3: 1.60 };
+    const FEE_RATE = 0.10;
+
+    // ✅ Wallet counts: Tier-3 matches Actions decision.n (Tier-3 volume on Actions)
+    // Tier-1/Tier-2 are “demo plausible” and can be adjusted anytime
+    const tierCounts = {
+      democo:    { t1: 12000, t2: 420 },
+      hubspot:   { t1: 3200,  t2: 120 },
+      salesforce:{ t1: 1200,  t2: 35  },
+      all:       { t1: 16400, t2: 575 }
+    };
+
+    function getTier3FromActions(org) {
+      const a = getActions(org);
+      const n = (a && a.decision && typeof a.decision.n === 'number') ? a.decision.n : 0;
+      return n;
+    }
+
+    async function fetchWallet() {
+      const clientId = clientIdForOrg(currentOrg);
+      const base = tierCounts[currentOrg] || tierCounts.democo;
+
+      const totalTier1 = base.t1 || 0;
+      const totalTier2 = base.t2 || 0;
+      const totalTier3 = getTier3FromActions(currentOrg);
+
+      const rewards =
+        totalTier1 * REWARD_RATES.t1 +
+        totalTier2 * REWARD_RATES.t2 +
+        totalTier3 * REWARD_RATES.t3;
+
+      const fees = rewards * FEE_RATE;
+      const funded = rewards + fees;
+      const txCount = totalTier1 + totalTier2 + totalTier3;
+
+      return {
+        client_id: clientId,
+        net_balance: 0,
+        total_funded: funded,
+        total_rewards_earned: rewards,
+        total_fees_accrued: fees,
+        total_transactions: txCount,
+        last_transaction_at: 'Demo ledger only (synthetic)',
+      };
+    }
+
+    function updateTierCounts() {
+      const base = tierCounts[currentOrg] || tierCounts.democo;
+      const t3 = getTier3FromActions(currentOrg);
+
+      if (qs('tier1-count')) qs('tier1-count').textContent = (base.t1 || 0).toLocaleString() + ' Tier-1 responses (demo)';
+      if (qs('tier2-count')) qs('tier2-count').textContent = (base.t2 || 0).toLocaleString() + ' Tier-2 responses (demo)';
+      if (qs('tier3-count')) qs('tier3-count').textContent = (t3 || 0).toLocaleString() + ' Tier-3 responses (demo)';
+    }
+
+    let engagementChart;
+
+    function ensureChart(labels, values) {
+      const ctx = qs('engagementChart').getContext('2d');
+      if (engagementChart) engagementChart.destroy();
+
+      engagementChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Avg Engagement Score',
+            data: values,
+            borderWidth: 2,
+            tension: 0.35,
+            pointRadius: 2,
+            pointHoverRadius: 4,
+            fill: false
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: {
+              suggestedMin: 3.5,
+              suggestedMax: 6.5,
+              ticks: { color: '#6B7280', font: { size: 11 } },
+              grid: { color: 'rgba(17,24,39,0.06)' }
+            },
+            x: {
+              ticks: { color: '#6B7280', font: { size: 10 } },
+              grid: { display: false }
+            }
+          }
+        }
+      });
+    }
+
+    function renderWalletCard(w) {
+      const client = w.client_id || clientIdForOrg(currentOrg);
+      const net = (w.net_balance ?? 0);
+      const funded = (w.total_funded ?? 0);
+      const rewards = (w.total_rewards_earned ?? 0);
+      const fees = (w.total_fees_accrued ?? 0);
+      const txCount = (w.total_transactions ?? 0);
+      const lastTx = w.last_transaction_at || '—';
+
+      qs('wallet-client').textContent = client;
+      qs('wallet-balance').textContent = fmtMoney.format(net);
+      qs('wallet-funded').textContent = fmtMoney.format(funded);
+      qs('wallet-rewards').textContent = fmtMoney.format(rewards);
+      qs('wallet-fees').textContent = fmtMoney.format(fees);
+      qs('wallet-tx-count').textContent = String(txCount);
+      qs('wallet-last-tx').textContent = lastTx;
+    }
+
+    function renderPsychAndHighlights(payload) {
+      const k = (payload && payload.kpis) ? payload.kpis : {};
+      const personas = payload.personas || [];
+      const topCodes = payload.top_codes || [];
+      const guidance = payload.guidance || [];
+
+      const safeVal = (val) => (typeof val === 'number' && !Number.isNaN(val)) ? fmt1.format(val) : '—';
+
+      qs('kpi-vei').textContent       = safeVal(k.vei);
+      qs('kpi-trust').textContent     = safeVal(k.trust);
+      qs('kpi-advocacy').textContent  = safeVal(k.advocacy);
+      qs('kpi-relevance').textContent = safeVal(k.relevance);
+
+      // ✅ Top Driver tile: use Actions R² primary driver (predictive), not highest mean
+      const a = getActions(currentOrg);
+      const drv = (a && Array.isArray(a.drivers)) ? a.drivers : [];
+      const primary = drv.length
+        ? drv.reduce((best, d) => (!best || (d.r2 ?? 0) > (best.r2 ?? 0)) ? d : best, null)
+        : null;
+
+      if (primary && typeof primary.r2 === 'number') {
+        const r2txt = String(primary.r2.toFixed(2)).replace(/^0/, "");
+        const nTxt = Number(primary.n || 0).toLocaleString();
+        qs('top-driver-headline').textContent = primary.name + ' is the strongest predictor';
+        qs('top-driver-body').textContent =
+          'Primary driver by R² (' + r2txt + ', n=' + nTxt + '). The Action Engine recommendations prioritize this lever first.';
+      } else {
+        qs('top-driver-headline').textContent = 'Waiting for data…';
+        qs('top-driver-body').textContent =
+          'Once Tier-3 data is available, VeriTechIQ highlights the strongest driver of engagement for this org.';
+      }
+
+      // Audience insight tile (use primary segment)
+      if (personas.length > 0) {
+        const p = personas[0];
+        const label = p.persona_type || 'Primary segment';
+        const users = p.users || 0;
+        qs('audience-headline').textContent = label;
+        qs('audience-body').textContent =
+          'Primary psychographic segment (' + users + ' respondents). Expect different response patterns vs secondary segments.';
+      } else {
+        qs('audience-headline').textContent = 'Segmentation loading…';
+        qs('audience-body').textContent =
+          'Psychographic personas summarize how this audience tends to decide, beyond opens and clicks.';
+      }
+
+      // Recommended focus tile (top rec body)
+      if (guidance.length > 0) {
+        qs('focus-headline').textContent = 'Recommended focus';
+        qs('focus-body').textContent = guidance[0];
+      } else {
+        qs('focus-headline').textContent = 'Test one change at a time.';
+        qs('focus-body').textContent =
+          'The Action Engine translates these drivers and segments into concrete experiments with expected lift.';
+      }
+
+      // Guardrails
+      const t = typeof k.trust === 'number' ? k.trust : null;
+      const r = typeof k.relevance === 'number' ? k.relevance : null;
+      let guard = 'As you allocate rewards, keep clarity and trust ahead of sheer volume and spend.';
+      if (t !== null && r !== null) {
+        if (t >= 5.5 && r < 4.5) {
+          guard = 'Trust is strong; focus on clarity and “what happens next” before increasing incentives.';
+        } else if (r >= 5.5 && t < 4.5) {
+          guard = 'Clarity looks solid; reinforce trust and risk messaging before scaling campaign volume.';
+        } else if (t < 4.5 && r < 4.5) {
+          guard = 'Both trust and clarity are mid-range—tighten the story and reduce confusion before raising incentives.';
+        }
+      }
+      qs('guardrails-body').textContent = guard;
+
+      // Tier-2 themes
+      const codeMap = {
+        'shorten_body_copy': 'Tier-2 signals point to confusion/overload—shorten copy and front-load the promise + one clear ask.',
+        'add_social_proof': 'Tier-2 signals show proof-seeking—add logos/testimonials/guarantee near the CTA to reduce perceived risk.',
+        'clarify_value_prop': 'Tier-2 signals show value ambiguity—make the outcome explicit (subject line + first paragraph) with a concrete example.'
+      };
+
+      if (topCodes.length > 0) {
+        const code = topCodes[0].insight_code || '';
+        qs('tier2-body').textContent = codeMap[code] || ('“' + code + '” is currently the most common coded theme in recent Tier-2 responses.');
+      } else {
+        qs('tier2-body').textContent =
+          'As Tier-2 coding comes online, this panel will surface the loudest “keep/stop/fix” themes in near real time.';
+      }
+    }
+
+    function computeConfidenceFromDrivers(driversPayload) {
+      const drivers = Array.isArray(driversPayload.primary_drivers) ? driversPayload.primary_drivers : [];
+      const total = typeof driversPayload.total_responses === 'number' ? driversPayload.total_responses : 0;
+      const fallbackUsed = !!driversPayload.fallback_used;
+
+      let band = 'gray';
+      if (drivers.some(d => d.band === 'green')) band = 'green';
+      else if (drivers.some(d => d.band === 'yellow' || d.band === 'amber')) band = 'amber';
+
+      let base = (band === 'green') ? 0.9 : (band === 'amber') ? 0.7 : 0.5;
+      if (total >= 400) base += 0.05;
+      else if (total < 50) base -= 0.15;
+      if (fallbackUsed) base = Math.min(base, 0.4);
+
+      const confidence = Math.max(0.1, Math.min(0.99, base));
+      return { band, pctConf: Math.round(confidence * 100) };
+    }
+
+    function renderConfidenceFromDrivers(driversPayload) {
+      if (!confidenceBadge || !confidenceValue) return;
+
+      const { band, pctConf } = computeConfidenceFromDrivers(driversPayload || {});
+      confidenceValue.textContent = pctConf + '% CI';
+
+      if (confidenceDot) {
+        confidenceDot.className = 'h-1.5 w-1.5 rounded-full ' + (
+          band === 'green' ? 'bg-emerald-400' :
+          band === 'amber' ? 'bg-amber-400' :
+          'bg-gray-400'
+        );
+      }
+    }
+
+    function setOrg(org) {
+      currentOrg = org;
+
+      document.querySelectorAll('.org-pill').forEach(btn => {
+        const isActive = btn.dataset.org === org;
+        btn.classList.toggle('org-pill-active', isActive);
+        if (isActive) {
+          btn.classList.add('bg-sky-600','text-white','shadow-sm','shadow-sky-500/40');
+          btn.classList.remove('hover:bg-gray-100');
+        } else {
+          btn.classList.remove('bg-sky-600','text-white','shadow-sm','shadow-sky-500/40');
+          btn.classList.add('hover:bg-gray-100');
+        }
+      });
+
+      const label =
+        org === 'democo' ? 'DemoCo' :
+        org === 'hubspot' ? 'HubSpot' :
+        org === 'salesforce' ? 'Salesforce' :
+        'All orgs';
+      if (engagementSubtitle) {
+        engagementSubtitle.textContent = 'Weekly VEI-style engagement index · ' + label + ' · Last 12 weeks';
+      }
+
+      updateTierCounts();
+    }
+
+    async function refreshAll() {
+      qs('refreshBtn').disabled = true;
+      try {
+        // Ensure bible exists
+        if (!window.DEMO_ACTIONS_DATA) {
+          throw new Error("demo_data.js not loaded. Confirm this file includes window.DEMO_ACTIONS_DATA and is reachable at ./static/demo_data.js");
+        }
+
+        const [eng, psych, wallet, drivers] = await Promise.all([
+          fetchEngagement(),
+          fetchPsych(),
+          fetchWallet(),
+          fetchPredictiveDrivers(),
+        ]);
+
+        ensureChart((eng && eng.labels) ? eng.labels : [], (eng && eng.values) ? eng.values : []);
+        renderPsychAndHighlights(psych || {});
+        if (wallet) renderWalletCard(wallet);
+        if (drivers) renderConfidenceFromDrivers(drivers);
+      } catch (err) {
+        console.error('refreshAll failed:', err);
+        alert('Error: ' + (err.message || err));
+      } finally {
+        qs('refreshBtn').disabled = false;
+      }
+    }
+
+    ['range','campaign','tier'].forEach(id => {
+      const el = qs(id);
+      if (el) el.addEventListener('change', refreshAll);
+    });
+
+    qs('refreshBtn').addEventListener('click', refreshAll);
+
+    document.querySelectorAll('.org-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        setOrg(btn.dataset.org);
+        refreshAll();
+      });
+    });
+
+    setOrg(currentOrg);
+    updateTierCounts();
+    refreshAll();
+  </script>
+
+</body>
+</html>

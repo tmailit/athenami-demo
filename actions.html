@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>VeriTechIQ – Action Engine (Demo)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+
+  <!-- 🔹 Global Top Navigation (match demo folder) -->
+  <nav class="bg-slate-950/90 border-b border-slate-800 sticky top-0 z-20 backdrop-blur">
+    <div class="max-w-5xl mx-auto px-4 h-12 flex items-center justify-between">
+      <div class="text-[11px] font-semibold tracking-wide uppercase text-slate-400">
+        VeriTechIQ™ Dashboard · Demo environment
+      </div>
+      <div class="flex items-center gap-2 text-xs">
+        <a href="./vei_v2_demo.html" class="px-3 py-1.5 rounded-lg text-slate-300 hover:text-sky-300 hover:bg-slate-800 transition">
+          Home
+        </a>
+        <a href="./predictive.html" class="px-3 py-1.5 rounded-lg text-slate-300 hover:text-sky-300 hover:bg-slate-800 transition">
+          Predictive Strength
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <div class="max-w-5xl mx-auto px-4 py-6 pb-16 space-y-6">
+
+    <!-- Header -->
+    <header class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-semibold tracking-tight">VeriTechIQ Action Engine</h1>
+        <p class="mt-1 text-sm text-slate-300">
+          Turns Tier-3 + legacy analytics into clear, tiered recommendations based on subscription level.
+        </p>
+      </div>
+
+      <div class="flex flex-col gap-3 sm:items-end sm:flex-1">
+
+        <!-- ORG selector -->
+        <div class="flex items-center justify-end gap-2">
+          <span class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Org</span>
+
+          <div id="orgPillGroup"
+               class="inline-flex items-center rounded-full border border-slate-700 bg-slate-900/80 p-1 text-xs font-medium shadow-sm">
+            <button id="orgDemoco" type="button"
+              class="org-pill org-pill-active rounded-full px-3 py-1 text-[11px] tracking-wide bg-emerald-500 text-slate-950 shadow-sm shadow-emerald-500/40"
+              data-org="democo">DemoCo</button>
+
+            <button id="orgHubspot" type="button"
+              class="org-pill rounded-full px-3 py-1 text-[11px] tracking-wide text-slate-200 hover:bg-slate-800"
+              data-org="hubspot">HubSpot</button>
+
+            <button id="orgSalesforce" type="button"
+              class="org-pill rounded-full px-3 py-1 text-[11px] tracking-wide text-slate-200 hover:bg-slate-800"
+              data-org="salesforce">Salesforce</button>
+
+            <button id="orgAllOrgs" type="button"
+              class="org-pill rounded-full px-3 py-1 text-[11px] tracking-wide text-slate-200 hover:bg-slate-800"
+              data-org="all">All orgs</button>
+          </div>
+        </div>
+
+        <!-- Controls row -->
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+          <div class="flex flex-col gap-1">
+            <label for="tierSelect" class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+              Subscription tier
+            </label>
+            <select id="tierSelect"
+              class="rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-sky-500/70">
+              <option value="1">Tier 1 – Basic</option>
+              <option value="2">Tier 2 – Growth</option>
+              <option value="3" selected>Tier 3 – Enterprise</option>
+            </select>
+          </div>
+
+          <div class="flex flex-col gap-1">
+            <label for="campaignInput" class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+              Campaign (optional)
+            </label>
+            <div class="flex items-center gap-2">
+              <input id="campaignInput" type="text" placeholder="All campaigns"
+                class="w-40 sm:w-52 rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-2 text-xs placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500/70" />
+              <button id="refreshButton"
+                class="rounded-xl bg-sky-500 hover:bg-sky-400 active:bg-sky-600 px-4 py-2 text-xs font-medium text-slate-950 transition">
+                Refresh
+              </button>
+            </div>
+          </div>
+
+          <div class="flex justify-end">
+            <button id="download-report-btn" type="button"
+              class="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/70 px-4 py-2 text-xs font-medium text-slate-100 hover:border-sky-400 hover:text-sky-300 transition">
+              <span>Download Intelligence Report</span>
+              <span class="rounded-md bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-900">PDF</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Meta row -->
+    <section class="grid gap-4 md:grid-cols-3">
+      <article class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 space-y-2">
+        <h2 class="text-xs font-semibold uppercase tracking-wide text-sky-300">Decision Readiness</h2>
+        <p id="decisionStatus" class="text-lg font-semibold text-emerald-300">—</p>
+        <p id="decisionDetail" class="text-xs text-slate-300">Loading…</p>
+      </article>
+
+      <article class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 space-y-2">
+        <h2 class="text-xs font-semibold uppercase tracking-wide text-emerald-300">Strongest Predictive Drivers</h2>
+        <ul id="driverList" class="text-xs text-slate-300 space-y-1"><li>Loading…</li></ul>
+      </article>
+
+      <article class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 space-y-2">
+        <h2 class="text-xs font-semibold uppercase tracking-wide text-slate-300">Report Scope</h2>
+        <p id="scopeCampaign" class="text-xs text-slate-300">Campaign: <span class="font-medium text-sky-300">All</span></p>
+        <p id="scopeTier" class="text-xs text-slate-300">Subscription: <span class="font-medium text-sky-300">Enterprise</span></p>
+        <p id="scopeUpdated" class="text-[11px] text-slate-500 mt-1">Last updated: —</p>
+      </article>
+    </section>
+
+   <!-- Psychographic profile -->
+    <section class="space-y-3">
+      <h2 class="text-sm font-semibold tracking-wide text-slate-100">Psychographic Profile (Tier-3 Constructs)</h2>
+
+      <div id="psychographicCard" class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 space-y-2">
+        <p id="psychographicProfileName" class="text-xs font-semibold tracking-wide text-sky-300">Audience profile: —</p>
+        <p id="psychographicSummary" class="text-xs text-slate-300">Loading…</p>
+        <ul id="psychographicList" class="text-xs text-slate-300 space-y-1"></ul>
+
+        <div id="psychographicSegments" class="mt-3 grid gap-3 sm:grid-cols-2 text-xs">
+          <article id="segmentPrimary" class="rounded-xl border border-slate-800 bg-slate-950/40 p-3 space-y-1">
+            <p id="segmentPrimaryTitle" class="font-semibold text-sky-300">Primary segment</p>
+            <p id="segmentPrimaryShare" class="text-[11px] text-slate-400">Share: —</p>
+            <p id="segmentPrimaryBody" class="text-[11px] text-slate-300">—</p>
+          </article>
+
+          <article id="segmentSecondary" class="rounded-xl border border-slate-800 bg-slate-950/40 p-3 space-y-1">
+            <p id="segmentSecondaryTitle" class="font-semibold text-slate-200">Secondary segment</p>
+            <p id="segmentSecondaryShare" class="text-[11px] text-slate-400">Share: —</p>
+            <p id="segmentSecondaryBody" class="text-[11px] text-slate-300">—</p>
+          </article>
+        </div>
+
+        <!-- 🔹 CTA: Psychographic Segments drill-down -->
+        <div class="mt-4 flex justify-start">
+          <a
+            href="./clusters.html?org=democo"
+            target="_blank"
+            class="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/70
+                   px-4 py-2 text-sm font-semibold text-slate-100
+                   hover:border-sky-500/60 hover:text-sky-300
+                   transition shadow-sm"
+          >
+            <span class="h-2 w-2 rounded-full bg-sky-400"></span>
+            View Psychographic Segments
+          </a>
+        </div>
+      </div>
+
+      <p class="text-[11px] text-slate-500">
+        VeriTechIQ focuses on how your audience <span class="font-semibold">thinks and decides</span> (Trust, Clarity, Motivation, ROI Intent),
+        rather than demographics. These patterns drive the recommendations below.
+      </p>
+    </section>
+
+    <!-- Recommendations -->
+    <section class="space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-sm font-semibold tracking-wide text-slate-100">Action Recommendations</h2>
+        <p id="summaryLift" class="text-xs text-emerald-300">Expected impact: —</p>
+      </div>
+      <div id="recommendationsContainer" class="space-y-3"></div>
+    </section>
+
+    <!-- Footer links -->
+    <section class="border-t border-slate-800 pt-4 mt-4 flex flex-wrap gap-3 text-xs">
+      <a href="./vei_v2_demo.html"
+        class="inline-flex items-center gap-1.5 rounded-full border border-slate-700 bg-slate-900/70 px-3 py-1.5 hover:border-sky-400 hover:text-sky-300 transition">
+        <span>View Engagement Dashboard</span>
+      </a>
+      <a href="./predictive.html"
+        class="inline-flex items-center gap-1.5 rounded-full border border-slate-700 bg-slate-900/70 px-3 py-1.5 hover:border-emerald-400 hover:text-emerald-300 transition">
+        <span>View Predictive Dashboard</span>
+      </a>
+    </section>
+
+  </div>
+
+  <!-- Demo data + demo logic -->
+  <script src="./static/demo_data.js"></script>
+  <script src="./static/demo_actions.js"></script>
+
+  <!-- ✅ Report download wiring: stores an on-screen snapshot so report ALWAYS matches this page -->
+  <script>
+    (function () {
+      function byId(id) { return document.getElementById(id); }
+      function safeText(el) { return el ? (el.textContent || "").trim() : ""; }
+      function safeHtml(el) { return el ? (el.innerHTML || "") : ""; }
+
+      function inferActiveOrg() {
+        var active = document.querySelector(".org-pill.org-pill-active");
+        if (active && active.dataset && active.dataset.org) return active.dataset.org;
+        return "democo";
+      }
+
+      // Turn the on-screen driverList into plain-text bullets for the PDF report
+      function extractDriverLines() {
+        var ul = byId("driverList");
+        if (!ul) return [];
+        return Array.from(ul.querySelectorAll("li"))
+          .map(function (li) { return (li.textContent || "").trim(); })
+          .filter(Boolean);
+      }
+
+      // Turn the on-screen psychographic list into "Trust: High (avg 6.1)" style strings
+      function extractConstructLines() {
+        var ul = byId("psychographicList");
+        if (!ul) return [];
+        return Array.from(ul.querySelectorAll("li"))
+          .map(function (li) { return (li.textContent || "").trim(); })
+          .filter(Boolean);
+      }
+
+      // Turn the on-screen recommendations into {title, body} cards for the PDF
+      function extractRecommendationCards() {
+        var container = byId("recommendationsContainer");
+        if (!container) return [];
+        var cards = Array.from(container.querySelectorAll("article"));
+        if (!cards.length) {
+          // fallback if recommendations are divs, etc.
+          return [];
+        }
+        return cards.map(function (card) {
+          var titleEl = card.querySelector("h3, h4, .font-semibold");
+          var bodyEl = card.querySelector("p");
+          return {
+            title: (titleEl ? titleEl.textContent : "").trim() || "Recommendation",
+            body: (bodyEl ? bodyEl.textContent : "").trim()
+          };
+        }).filter(function (c) { return c.title || c.body; });
+      }
+
+      function buildSnapshot() {
+        var org = inferActiveOrg();
+
+        var tierEl = byId("tierSelect");
+        var tier = tierEl ? (tierEl.value || "3") : "3";
+
+        var campaignEl = byId("campaignInput");
+        var campaignId = campaignEl ? (campaignEl.value || "").trim() : "";
+
+        // These are already-rendered, so just copy them
+        var decisionStatus = safeText(byId("decisionStatus"));
+        var decisionDetail = safeText(byId("decisionDetail"));
+
+        // Use scopeUpdated as our “freshness” line in the PDF
+        var scopeUpdated = safeText(byId("scopeUpdated"));
+
+        // We’ll build a simple reliability line based on decision + scopeUpdated.
+        // (If you later add a reliability element to the page, we can capture it too.)
+        var reliabilityMeta =
+          "Reliability: " + (decisionStatus ? decisionStatus : "—") +
+          (scopeUpdated ? (" · " + scopeUpdated) : "");
+
+        var campaignLabel = safeText(byId("scopeCampaign")) || ("Campaign: " + (campaignId || "All"));
+        var tierLabel = safeText(byId("scopeTier")) || ("Subscription: Tier " + tier);
+
+        var profileName = safeText(byId("psychographicProfileName"));
+        var psychSummary = safeText(byId("psychographicSummary"));
+
+        var primaryTitle = safeText(byId("segmentPrimaryTitle"));
+        var primaryShare = safeText(byId("segmentPrimaryShare"));
+        var primaryBody = safeText(byId("segmentPrimaryBody"));
+        var secondaryTitle = safeText(byId("segmentSecondaryTitle"));
+        var secondaryShare = safeText(byId("segmentSecondaryShare"));
+        var secondaryBody = safeText(byId("segmentSecondaryBody"));
+
+        var primaryLine = "Primary segment: " + [primaryTitle, primaryShare].filter(Boolean).join(" ");
+        if (primaryBody) primaryLine += " — " + primaryBody;
+
+        var secondaryLine = "Secondary segment: " + [secondaryTitle, secondaryShare].filter(Boolean).join(" ");
+        if (secondaryBody) secondaryLine += " — " + secondaryBody;
+
+        return {
+          // required for the report to accept snapshot
+          org: String(org || "").toLowerCase(),
+          tier: String(tier),
+          campaign_id: String(campaignId || ""),
+
+          // section 1
+          decision_status: decisionStatus || "—",
+          decision_detail: decisionDetail || "—",
+          reliability_meta: reliabilityMeta || "—",
+          driver_list: extractDriverLines(),
+
+          scope_summary: "Scope: " + org + " · " + (campaignId || "All campaigns") + " – Tier " + tier,
+          scope_updated: scopeUpdated ? ("Last updated: " + scopeUpdated.replace(/^Last updated:\s*/i, "")) : "Last updated: —",
+          updated_at: scopeUpdated || "",
+
+          // section 2
+          psych_profile_name: profileName || "Audience profile: —",
+          psych_summary: psychSummary || "—",
+          psych_constructs: extractConstructLines(),
+          segment_primary: primaryLine || "Primary segment: —",
+          segment_secondary: secondaryLine || "Secondary segment: —",
+
+          // section 3
+          summary_lift: safeText(byId("summaryLift")) || "Expected impact: —",
+          recommendations: extractRecommendationCards(),
+
+          // section 4 (simple demo narrative)
+          roi_summary:
+            "This report mirrors the on-screen Action Engine view for the selected org and scope. " +
+            "Prioritize the primary driver first, validate with a simple A/B test, then layer secondary improvements. " +
+            "As more verified Tier-3 responses accumulate, lift ranges tighten and Decision Readiness improves."
+        };
+      }
+
+      function storeSnapshot(payload) {
+        try {
+          sessionStorage.setItem("vei_actions_report_snapshot", JSON.stringify(payload));
+        } catch (e) {
+          // If storage fails, report will show its warning and ask you to re-download.
+        }
+      }
+
+      // Wire download button
+      var downloadBtn = byId("download-report-btn");
+      if (!downloadBtn) return;
+
+      downloadBtn.addEventListener("click", function () {
+        var snap = buildSnapshot();
+        storeSnapshot(snap);
+
+        var qs = new URLSearchParams();
+        qs.set("org", snap.org || "democo");
+        qs.set("tier", snap.tier || "3");
+        qs.set("campaign_id", snap.campaign_id || "");
+
+        window.open("./actions_report.html?" + qs.toString(), "_blank");
+      });
+    })();
+  </script>
+
+</body>
+</html>

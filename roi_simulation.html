@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>VeriTechIQ – ROI Simulation Engine (Demo)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+  <div class="max-w-6xl mx-auto px-4 py-6 space-y-6">
+
+    <!-- Top Nav: match demo folder -->
+    <nav class="mb-2 border-b border-slate-800 pb-2">
+      <div class="flex flex-wrap items-center gap-2 text-xs">
+        <a
+          href="./vei_v2_demo.html"
+          class="inline-flex items-center gap-1 rounded-full border border-slate-700 bg-slate-900/70 px-3 py-1.5
+                 font-medium text-slate-200 hover:border-sky-500/60 hover:text-sky-300 transition"
+        >
+          <span class="h-1.5 w-1.5 rounded-full bg-slate-400"></span>
+          <span>Home · VEI v2</span>
+        </a>
+
+        <a
+          href="./predictive.html"
+          class="inline-flex items-center gap-1 rounded-full border border-slate-700 bg-slate-900/70 px-3 py-1.5
+                 font-medium text-slate-200 hover:border-sky-500/60 hover:text-sky-300 transition"
+        >
+          <span class="h-1.5 w-1.5 rounded-full bg-slate-400"></span>
+          <span>Predictive Strength</span>
+        </a>
+
+        <a
+          href="./actions.html"
+          class="inline-flex items-center gap-1 rounded-full border border-slate-700 bg-slate-900/70 px-3 py-1.5
+                 font-medium text-slate-200 hover:border-sky-500/60 hover:text-sky-300 transition"
+        >
+          <span class="h-1.5 w-1.5 rounded-full bg-slate-400"></span>
+          <span>Action Engine</span>
+        </a>
+      </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <div class="space-y-1">
+        <h1 class="text-2xl sm:text-3xl font-semibold tracking-tight">
+          ROI Simulation Engine
+        </h1>
+        <p class="text-sm text-slate-300">
+          Convert verified lift bands into directional revenue scenarios. Use this as a decision co-pilot once the
+          Reliability Engine gate is green.
+        </p>
+
+        <p id="scopeLine" class="text-[11px] text-slate-400">
+          Scope: <span id="orgLabel" class="font-semibold text-sky-300">DemoCo</span>
+          <span id="timelineInline" class="hidden"> · <span id="timelineText">VeriTechIQ Production timeline</span></span>
+        </p>
+
+        <p id="driverContext" class="text-[11px] text-slate-400">
+          Driver: <span id="driverNameLabel" class="font-semibold text-slate-200">—</span>
+          · KPI: <span id="kpiLabel" class="font-semibold text-slate-200">—</span>
+          <span id="campaignLabelWrapper" class="hidden">
+            · Campaign: <span id="campaignLabel" class="font-semibold text-slate-200"></span>
+          </span>
+        </p>
+
+        <p id="reliabilityLine" class="text-[11px] text-slate-400">
+          Reliability gate: <span id="reliabilityBadge" class="font-semibold text-amber-300">Emerging</span>
+          · <span id="reliabilityMeta">Cronbach’s α — · n —</span>
+        </p>
+      </div>
+
+      <!-- ORG + Timeline selectors -->
+      <div class="flex flex-col gap-3 sm:items-end">
+        <!-- ORG pills -->
+        <div class="flex items-center justify-end gap-2">
+          <span class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Org</span>
+          <div
+            id="orgPillGroup"
+            class="inline-flex items-center rounded-full border border-slate-700 bg-slate-900/80 p-1 text-xs font-medium shadow-sm"
+          >
+            <button type="button"
+              class="org-pill org-pill-active rounded-full px-3 py-1 text-[11px] tracking-wide bg-emerald-500 text-slate-950 shadow-sm shadow-emerald-500/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/70 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+              data-org="democo">DemoCo</button>
+
+            <button type="button"
+              class="org-pill rounded-full px-3 py-1 text-[11px] tracking-wide text-slate-200 hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/70 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+              data-org="hubspot">HubSpot</button>
+
+            <button type="button"
+              class="org-pill rounded-full px-3 py-1 text-[11px] tracking-wide text-slate-200 hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/70 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+              data-org="salesforce">Salesforce</button>
+
+            <button type="button"
+              class="org-pill rounded-full px-3 py-1 text-[11px] tracking-wide text-slate-200 hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/70 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+              data-org="all">All orgs</button>
+          </div>
+        </div>
+
+       
+      </div>
+    </header>
+
+    <!-- Simulation controls -->
+    <section class="space-y-4">
+      <h2 class="text-sm font-semibold tracking-wide text-slate-100 flex items-center gap-2">
+        Simulation inputs
+        <button
+          class="text-slate-400 hover:text-slate-200 transition"
+          id="helpBtn"
+          type="button"
+          title="How to use"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
+          </svg>
+        </button>
+      </h2>
+
+      <div class="grid gap-4 md:grid-cols-2">
+        <!-- Baseline + slider -->
+        <div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 space-y-3">
+          <div class="flex flex-col gap-1">
+            <label for="baselineRevenue" class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+              Baseline revenue window
+            </label>
+            <div class="flex items-center gap-1">
+              <span class="text-xs text-slate-300">$</span>
+              <input
+                id="baselineRevenue"
+                type="number"
+                min="0"
+                step="100"
+                class="w-44 rounded-lg border border-slate-700 bg-slate-950 px-2 py-1.5 text-right text-xs text-slate-100
+                       focus:outline-none focus:ring-1 focus:ring-sky-400"
+                placeholder="100000"
+              />
+            </div>
+            <p class="text-[10px] text-slate-500">
+              Use the same window as your KPI baseline (e.g., last 30 days for this org/campaign).
+            </p>
+          </div>
+
+          <div class="space-y-2">
+            <label for="expectedLift" class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+              Expected performance lift (center of band)
+            </label>
+            <input id="expectedLift" type="range" min="1" max="30" value="8" class="w-full" />
+            <p class="text-[11px] text-slate-300">
+              Center lift:
+              <span id="expectedLiftLabel" class="font-semibold text-emerald-300">8%</span>
+              &nbsp;· Conservative and stretch bands are calculated around this value.
+            </p>
+          </div>
+        </div>
+
+        <!-- Band tuning -->
+        <div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 space-y-3">
+          <p class="text-xs text-slate-300">
+            Optional tuning: adjust how wide your conservative / stretch bands run around the center.
+            Narrow bands = more confidence; wider bands = more uncertainty.
+          </p>
+
+          <div class="space-y-2">
+            <label for="bandTightness" class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+              Band width
+            </label>
+            <input id="bandTightness" type="range" min="10" max="60" value="30" class="w-full" />
+            <p class="text-[11px] text-slate-300">
+              Band width:
+              <span id="bandTightnessLabel" class="font-semibold text-emerald-300">±30%</span>
+            </p>
+          </div>
+
+          <div class="flex flex-wrap gap-2 text-[11px] text-slate-400">
+            <span class="inline-flex items-center gap-1 rounded-full bg-slate-900 px-2 py-0.5 border border-slate-700">
+              <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+              Conservative = center × (1 − width)
+            </span>
+            <span class="inline-flex items-center gap-1 rounded-full bg-slate-900 px-2 py-0.5 border border-slate-700">
+              <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+              Stretch = center × (1 + width)
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Simulation output -->
+    <section class="space-y-3">
+      <h2 class="text-sm font-semibold tracking-wide text-slate-100">Revenue scenarios</h2>
+      <p class="text-[11px] text-slate-400">
+        These bands are directional, not forecasts. Use them to compare scenarios, size experiments,
+        and discuss trade-offs — especially once the Reliability Engine shows a green gate for this driver.
+      </p>
+
+      <div id="scenarioGrid" class="grid gap-4 md:grid-cols-3">
+        <!-- Conservative -->
+        <article class="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 space-y-2">
+          <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-300">Conservative</h3>
+          <p class="text-[11px] text-slate-400">
+            Directional upside if execution is uneven or segments respond slowly.
+          </p>
+          <p class="text-xl font-semibold text-emerald-300"><span id="conservativePct">—</span> lift</p>
+          <p class="text-sm text-emerald-200">≈ <span id="conservativeDelta">$0</span> incremental revenue</p>
+        </article>
+
+        <!-- Likely -->
+        <article class="rounded-2xl border border-emerald-500/70 bg-slate-900/90 p-4 space-y-2 shadow-sm">
+          <h3 class="text-xs font-semibold uppercase tracking-wide text-emerald-300">Most likely</h3>
+          <p class="text-[11px] text-emerald-100/90">
+            Expected window once this driver is addressed with solid execution and alignment to your psychographic profile.
+          </p>
+          <p class="text-xl font-semibold text-emerald-200"><span id="likelyPct">—</span> lift</p>
+          <p class="text-sm text-emerald-100">≈ <span id="likelyDelta">$0</span> incremental revenue</p>
+        </article>
+
+        <!-- Stretch -->
+        <article class="rounded-2xl border border-emerald-500/40 bg-slate-900/80 p-4 space-y-2">
+          <h3 class="text-xs font-semibold uppercase tracking-wide text-emerald-200">Stretch</h3>
+          <p class="text-[11px] text-emerald-100/80">
+            Upside if your most responsive segments lean in and the offer + timing land perfectly.
+          </p>
+          <p class="text-xl font-semibold text-emerald-200"><span id="stretchPct">—</span> lift</p>
+          <p class="text-sm text-emerald-100">≈ <span id="stretchDelta">$0</span> incremental revenue</p>
+        </article>
+      </div>
+
+      <p id="finePrint" class="text-[10px] text-slate-500 mt-1">
+        If Reliability is emerging/learning, treat the likely band as directional and size experiments with guardrails.
+      </p>
+    </section>
+
+    <!-- Back links -->
+    <section class="border-t border-slate-800 pt-4 mt-4 flex flex-wrap gap-3 text-xs">
+      <a
+        href="./vei_v2_demo.html"
+        class="inline-flex items-center gap-1.5 rounded-full border border-slate-700
+               bg-slate-900/70 px-3 py-1.5 hover:border-sky-400 hover:text-sky-300 transition"
+      >
+        <span>Back to Engagement Dashboard</span>
+      </a>
+      <a
+        href="./predictive.html"
+        class="inline-flex items-center gap-1.5 rounded-full border border-slate-700
+               bg-slate-900/70 px-3 py-1.5 hover:border-emerald-400 hover:text-emerald-300 transition"
+      >
+        <span>Back to Predictive Strength</span>
+      </a>
+      <a
+        href="./actions.html"
+        class="inline-flex items-center gap-1.5 rounded-full border border-slate-700
+               bg-slate-900/70 px-3 py-1.5 hover:border-emerald-400 hover:text-emerald-300 transition"
+      >
+        <span>Back to Action Engine</span>
+      </a>
+    </section>
+
+    <!-- Notes -->
+    <section class="mt-10 pt-6 border-t border-slate-800 text-[11px] leading-relaxed text-slate-400">
+      <p class="font-semibold text-slate-200 mb-2">VeriTechIQ Verified Engagement Intelligence — ROI Simulation Notes</p>
+      <p class="mt-2">
+        This ROI Simulation Engine is a decision-support tool. It translates lift bands into directional revenue scenarios
+        based on a baseline window. When the Reliability Engine (Cronbach’s α and sample size) is green, these bands are
+        anchored to statistically defensible Tier-3 drivers rather than vanity metrics.
+      </p>
+      <p class="mt-2 mb-8">
+        Outputs are estimates, not guarantees. Combine with A/B testing, cohort analysis, and professional oversight for high-stakes decisions.
+      </p>
+
+      <div class="w-full flex flex-col items-center mt-6 pt-4 border-t border-slate-700/60">
+        <p class="text-[10px] tracking-wide uppercase font-semibold text-slate-300">VeriTechIQ™ Verified Engagement Intelligence</p>
+        <p class="text-[10px] text-slate-500 mt-1">© 2025 VeriTechIQ. All rights reserved.</p>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      // ───────────────────────── Demo bundles (seed realism by org) ─────────────────────────
+      const ORG_META = {
+        democo:     { label: "DemoCo",     reliability: { band: "amber", label: "Emerging", alpha: 0.68, n: 280 }, baselineRevenue: 180000, liftCenter: 12, bandWidth: 30, showTimeline: true  },
+        hubspot:    { label: "HubSpot",    reliability: { band: "amber", label: "Emerging", alpha: 0.66, n: 420 }, baselineRevenue: 240000, liftCenter: 9,  bandWidth: 35, showTimeline: false },
+        salesforce: { label: "Salesforce", reliability: { band: "gray",  label: "Learning", alpha: 0.55, n: 42  }, baselineRevenue: 120000, liftCenter: 4,  bandWidth: 45, showTimeline: false },
+        all:        { label: "All orgs",   reliability: { band: "amber", label: "Emerging", alpha: 0.71, n: 120 }, baselineRevenue: 320000, liftCenter: 8,  bandWidth: 30, showTimeline: false }
+      };
+
+      const bandColor = {
+        green: "text-emerald-300",
+        amber: "text-amber-300",
+        gray: "text-slate-300",
+        red: "text-rose-300"
+      };
+
+      // ───────────────────────── Query param context ─────────────────────────
+      const params = new URLSearchParams(window.location.search || "");
+      const qpOrg = (params.get("org") || "democo").toLowerCase();
+      const qpDriver = params.get("driver") || "Key Tier-3 driver";
+      const qpKpi = params.get("kpi") || "Primary KPI";
+      const qpCampaign = params.get("campaign");
+
+// ─────────────────────────────────────────────────────────────
+// DOM
+// ─────────────────────────────────────────────────────────────
+const orgLabel = document.getElementById("orgLabel");
+const driverNameLabel = document.getElementById("driverNameLabel");
+const kpiLabel = document.getElementById("kpiLabel");
+const campaignLabelWrapper = document.getElementById("campaignLabelWrapper");
+const campaignLabel = document.getElementById("campaignLabel");
+
+const reliabilityBadge = document.getElementById("reliabilityBadge");
+const reliabilityMeta = document.getElementById("reliabilityMeta");
+
+const orgPills = document.querySelectorAll(".org-pill");
+
+const baselineInput = document.getElementById("baselineRevenue");
+const liftSlider = document.getElementById("expectedLift");
+const liftLabel = document.getElementById("expectedLiftLabel");
+const bandSlider = document.getElementById("bandTightness");
+const bandLabel = document.getElementById("bandTightnessLabel");
+
+const conservativePctEl = document.getElementById("conservativePct");
+const likelyPctEl = document.getElementById("likelyPct");
+const stretchPctEl = document.getElementById("stretchPct");
+const conservativeDeltaEl = document.getElementById("conservativeDelta");
+const likelyDeltaEl = document.getElementById("likelyDelta");
+const stretchDeltaEl = document.getElementById("stretchDelta");
+
+const helpBtn = document.getElementById("helpBtn");
+
+let activeOrg = ORG_META[qpOrg] ? qpOrg : "democo";
+
+// ─────────────────────────────────────────────────────────────
+// Header context from query params
+// ─────────────────────────────────────────────────────────────
+driverNameLabel.textContent = qpDriver || "Key Tier-3 driver";
+kpiLabel.textContent = qpKpi || "Primary KPI";
+
+if (qpCampaign && qpCampaign.trim() && qpCampaign.toLowerCase() !== "all") {
+  campaignLabelWrapper.classList.remove("hidden");
+  campaignLabel.textContent = qpCampaign.trim();
+}
+
+// ─────────────────────────────────────────────────────────────
+// ORG pill UI
+// ─────────────────────────────────────────────────────────────
+function applyOrgPillsUI() {
+  orgPills.forEach(function (pill) {
+    pill.classList.remove(
+      "org-pill-active",
+      "bg-emerald-500",
+      "text-slate-950",
+      "shadow-sm",
+      "shadow-emerald-500/40"
+    );
+    pill.classList.add("text-slate-200");
+
+    if ((pill.dataset.org || "democo") === activeOrg) {
+      pill.classList.add(
+        "org-pill-active",
+        "bg-emerald-500",
+        "text-slate-950",
+        "shadow-sm",
+        "shadow-emerald-500/40"
+      );
+      pill.classList.remove("text-slate-200");
+    }
+  });
+}
+
+// ─────────────────────────────────────────────────────────────
+// Header + org meta (NO TIMELINE LOGIC)
+// ─────────────────────────────────────────────────────────────
+function updateHeaderMeta() {
+  const meta = ORG_META[activeOrg] || ORG_META.democo;
+
+  // Org label
+  orgLabel.textContent = meta.label;
+
+  // Reliability badge
+  reliabilityBadge.textContent = meta.reliability.label;
+  reliabilityBadge.className =
+    "font-semibold " + (bandColor[meta.reliability.band] || "text-slate-300");
+
+  reliabilityMeta.textContent =
+    "Cronbach’s α " +
+    meta.reliability.alpha.toFixed(2) +
+    " · n " +
+    meta.reliability.n.toLocaleString();
+
+  // Seed simulation inputs from org defaults
+  baselineInput.value = String(meta.baselineRevenue);
+  liftSlider.value = String(meta.liftCenter);
+  bandSlider.value = String(meta.bandWidth);
+
+  recalc();
+}
+
+
+      // ───────────────────────── Simulation math ─────────────────────────
+      function fmtPct(val) { return (val * 100).toFixed(1) + "%"; }
+      function fmtMoney(val) {
+        if (!isFinite(val)) return "$0";
+        const rounded = Math.round(val);
+        return "$" + rounded.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
+
+      function recalc() {
+        const baseline = parseFloat(baselineInput.value || "0") || 0;
+        const centerPct = (parseFloat(liftSlider.value || "0") || 0) / 100;
+        const widthPct = (parseFloat(bandSlider.value || "0") || 0) / 100;
+
+        liftLabel.textContent = (centerPct * 100).toFixed(1) + "%";
+        bandLabel.textContent = "±" + (widthPct * 100).toFixed(0) + "%";
+
+        const conservative = Math.max(0, centerPct * (1 - widthPct));
+        const stretch = centerPct * (1 + widthPct);
+
+        conservativePctEl.textContent = fmtPct(conservative);
+        likelyPctEl.textContent = fmtPct(centerPct);
+        stretchPctEl.textContent = fmtPct(stretch);
+
+        conservativeDeltaEl.textContent = fmtMoney(baseline * conservative);
+        likelyDeltaEl.textContent = fmtMoney(baseline * centerPct);
+        stretchDeltaEl.textContent = fmtMoney(baseline * stretch);
+      }
+
+      baselineInput.addEventListener("input", recalc);
+      liftSlider.addEventListener("input", recalc);
+      bandSlider.addEventListener("input", recalc);
+
+      // ───────────────────────── Events ─────────────────────────
+      orgPills.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          activeOrg = (btn.getAttribute("data-org") || "democo").toLowerCase();
+          applyOrgPillsUI();
+          updateHeaderMeta();
+        });
+      });
+
+      timelinePills.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          activeTimeline = (btn.getAttribute("data-timeline") || "production").toLowerCase();
+          applyTimelineUI();
+          updateHeaderMeta();
+        });
+      });
+
+      helpBtn.addEventListener("click", function () {
+        alert(
+`This ROI Simulation Engine is a planning tool.
+
+• Start with a baseline revenue window (e.g., last 30 days).
+• Use the sliders to explore directional lift bands.
+• If Reliability is green, you can treat these as decision-grade planning ranges.
+• If Reliability is emerging/learning, use bands to size experiments and guardrails — not forecasts.`
+        );
+      });
+
+      // Initial state from query params
+      applyOrgPillsUI();
+      applyTimelineUI();
+      updateHeaderMeta();
+    })();
+  </script>
+</body>
+</html>

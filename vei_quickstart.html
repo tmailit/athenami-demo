@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>VEI Quickstart · AthenaMI / VeriTechIQ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    @media print {
+      .no-print { display: none !important; }
+      body { background: #fff !important; }
+      .page { box-shadow: none !important; border: none !important; }
+    }
+  </style>
+</head>
+
+<body class="bg-slate-50 text-slate-900">
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+    <div class="page bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden">
+      <!-- Header -->
+      <div class="px-5 sm:px-6 py-5 border-b border-slate-200">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+              AthenaMI · Powered by VeriTechIQ™
+            </p>
+            <h1 class="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900">
+              VEI Dashboard Quickstart (Investor Demo)
+            </h1>
+            <p class="mt-1 text-[13px] text-slate-600 leading-relaxed">
+              A one-page guide to interpret the demo: what each page does, what “ORG” means, and why you may see
+              “Emerging” in Predictive while Actions still provides next steps.
+            </p>
+          </div>
+
+          <div class="no-print flex flex-col gap-2 items-end">
+            <a href="vei_v2_demo.html" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center justify-center rounded-full bg-slate-900 px-4 py-2 text-xs font-semibold text-white hover:bg-slate-800">
+              Open VEI Dashboard
+            </a>
+            <button onclick="window.print()"
+               class="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50">
+              Print / Save as PDF
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div class="px-5 sm:px-6 py-6 space-y-6">
+        <!-- What this is / isn't -->
+        <section class="grid gap-4 sm:grid-cols-2">
+          <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <h2 class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">What this is</h2>
+            <p class="mt-2 text-[13px] text-slate-700 leading-relaxed">
+              AthenaMI adds a <span class="font-semibold text-slate-900">Verified Engagement Intelligence (VEI)</span> layer
+              above any CRM/ESP. It combines:
+              <span class="font-medium">Tier-1 human verify</span>, <span class="font-medium">Tier-2 meaning capture</span>,
+              and <span class="font-medium">Tier-3 psychometrics</span> to produce decision-guidance leaders can defend.
+            </p>
+          </div>
+          <div class="rounded-2xl border border-slate-200 bg-white p-4">
+            <h2 class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">What this isn’t</h2>
+            <p class="mt-2 text-[13px] text-slate-700 leading-relaxed">
+              This demo uses <span class="font-semibold text-slate-900">synthetic-but-plausible datasets</span> so the experience is stable.
+              The <span class="font-semibold">workflow + engine logic</span> are real; numbers are representative.
+            </p>
+            <p class="mt-2 text-[12px] text-slate-500">
+              In production, org context is driven by real integrations + live verified engagement events.
+            </p>
+          </div>
+        </section>
+
+        <!-- Navigation map -->
+        <section class="rounded-2xl border border-slate-200 bg-white p-4">
+          <h2 class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Navigation map</h2>
+
+          <div class="mt-3 grid gap-3 md:grid-cols-3 text-[13px]">
+            <div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
+              <p class="font-semibold text-slate-900">1) VEI Dashboard</p>
+              <p class="mt-1 text-slate-700">Orientation + engagement quality.</p>
+              <p class="mt-2 text-[12px] text-slate-500">vei_v2_demo.html</p>
+            </div>
+
+            <div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
+              <p class="font-semibold text-slate-900">2) Predictive</p>
+              <p class="mt-1 text-slate-700">Which constructs explain KPI lift.</p>
+              <p class="mt-2 text-[12px] text-slate-500">
+                Includes: <span class="font-medium">ROI Simulation</span> button
+              </p>
+            </div>
+
+            <div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
+              <p class="font-semibold text-slate-900">3) Actions</p>
+              <p class="mt-1 text-slate-700">Priority recommendations + lift bands.</p>
+              <p class="mt-2 text-[12px] text-slate-500">
+                Includes: <span class="font-medium">Clusters</span> button
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Interpretation keys -->
+        <section class="grid gap-4 md:grid-cols-2">
+          <div class="rounded-2xl border border-slate-200 bg-white p-4">
+            <h2 class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+              Why Predictive can be “Emerging”
+            </h2>
+            <p class="mt-2 text-[13px] text-slate-700 leading-relaxed">
+              <span class="font-semibold text-slate-900">Predictive Strength</span> answers:
+              “How strong is the relationship between constructs and an outcome?”
+              <br />
+              <span class="font-semibold text-slate-900">Reliability gating</span> answers:
+              “Is the evidence stable enough to operationalize?”
+            </p>
+            <p class="mt-2 text-[12px] text-slate-500 leading-relaxed">
+              Even if a relationship looks strong, the system stays conservative if reliability and sample sufficiency
+              aren’t at decision-grade thresholds yet.
+            </p>
+          </div>
+
+          <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <h2 class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+              Why Actions still shows “what to do”
+            </h2>
+            <p class="mt-2 text-[13px] text-slate-700 leading-relaxed">
+              Actions is a decision co-pilot: it recommends <span class="font-semibold text-slate-900">safe next steps</span>
+              even under uncertainty (e.g., tighten clarity, adjust reward framing, run a narrow A/B test, or collect more Tier-3).
+            </p>
+            <p class="mt-2 text-[12px] text-slate-500">
+              The mismatch is intentional: responsible analytics + governance, not “dashboard theater.”
+            </p>
+          </div>
+        </section>
+
+        <!-- ORG meaning -->
+        <section class="rounded-2xl border border-slate-200 bg-white p-4">
+          <h2 class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">What “ORG” means in this demo</h2>
+          <p class="mt-2 text-[13px] text-slate-700 leading-relaxed">
+            ORGs are example environments used to demonstrate different maturity states (volume, reliability, and response patterns).
+            They’re not meant to mirror actual HubSpot/Salesforce performance — they exist to show how outputs change as data becomes
+            decision-grade.
+          </p>
+        </section>
+
+        <!-- Footer -->
+        <section class="pt-2 border-t border-slate-200">
+          <p class="text-[11px] text-slate-500">
+            © 2025 AthenaMI · Powered by VeriTechIQ™ Verified Engagement Intelligence.
+            All insights shown are directional and should be combined with human judgment and ethical review.
+          </p>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      // If opened with ?print=1, auto-open print dialog after layout.
+      const p = new URLSearchParams(window.location.search || "");
+      if (p.get("print") === "1") {
+        setTimeout(() => window.print(), 350);
+      }
+    })();
+  </script>
+</body>
+</html>
