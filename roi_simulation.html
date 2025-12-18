@@ -55,7 +55,6 @@
 
         <p id="scopeLine" class="text-[11px] text-slate-400">
           Scope: <span id="orgLabel" class="font-semibold text-sky-300">DemoCo</span>
-          <span id="timelineInline" class="hidden"> · <span id="timelineText">VeriTechIQ Production timeline</span></span>
         </p>
 
         <p id="driverContext" class="text-[11px] text-slate-400">
@@ -72,7 +71,7 @@
         </p>
       </div>
 
-      <!-- ORG + Timeline selectors -->
+      <!-- ORG selectors -->
       <div class="flex flex-col gap-3 sm:items-end">
         <!-- ORG pills -->
         <div class="flex items-center justify-end gap-2">
@@ -98,8 +97,6 @@
               data-org="all">All orgs</button>
           </div>
         </div>
-
-       
       </div>
     </header>
 
@@ -278,129 +275,72 @@
     </section>
   </div>
 
+  <!-- ✅ THE BIBLE -->
+  <script src="./static/demo_data.js"></script>
+
   <script>
     (function () {
-      // ───────────────────────── Demo bundles (seed realism by org) ─────────────────────────
-      const ORG_META = {
-        democo:     { label: "DemoCo",     reliability: { band: "amber", label: "Emerging", alpha: 0.68, n: 280 }, baselineRevenue: 180000, liftCenter: 12, bandWidth: 30, showTimeline: true  },
-        hubspot:    { label: "HubSpot",    reliability: { band: "amber", label: "Emerging", alpha: 0.66, n: 420 }, baselineRevenue: 240000, liftCenter: 9,  bandWidth: 35, showTimeline: false },
-        salesforce: { label: "Salesforce", reliability: { band: "gray",  label: "Learning", alpha: 0.55, n: 42  }, baselineRevenue: 120000, liftCenter: 4,  bandWidth: 45, showTimeline: false },
-        all:        { label: "All orgs",   reliability: { band: "amber", label: "Emerging", alpha: 0.71, n: 120 }, baselineRevenue: 320000, liftCenter: 8,  bandWidth: 30, showTimeline: false }
-      };
+      // ─────────────────────────────────────────────────────────────
+      // Bible access
+      // ─────────────────────────────────────────────────────────────
+      const BIBLE = (window.DEMO_ACTIONS_DATA || {});
 
+      // ─────────────────────────────────────────────────────────────
+      // Query param context
+      // ─────────────────────────────────────────────────────────────
+      const params = new URLSearchParams(window.location.search || "");
+      const qpOrg = (params.get("org") || "democo").toLowerCase();
+      const qpDriver = (params.get("driver") || "").trim();
+      const qpKpi = (params.get("kpi") || "Primary KPI").trim();
+      const qpCampaign = (params.get("campaign") || "").trim();
+
+      // ─────────────────────────────────────────────────────────────
+      // DOM
+      // ─────────────────────────────────────────────────────────────
+      const orgLabel = document.getElementById("orgLabel");
+      const driverNameLabel = document.getElementById("driverNameLabel");
+      const kpiLabel = document.getElementById("kpiLabel");
+      const campaignLabelWrapper = document.getElementById("campaignLabelWrapper");
+      const campaignLabel = document.getElementById("campaignLabel");
+
+      const reliabilityBadge = document.getElementById("reliabilityBadge");
+      const reliabilityMeta = document.getElementById("reliabilityMeta");
+
+      const orgPills = document.querySelectorAll(".org-pill");
+
+      const baselineInput = document.getElementById("baselineRevenue");
+      const liftSlider = document.getElementById("expectedLift");
+      const liftLabel = document.getElementById("expectedLiftLabel");
+      const bandSlider = document.getElementById("bandTightness");
+      const bandLabel = document.getElementById("bandTightnessLabel");
+
+      const conservativePctEl = document.getElementById("conservativePct");
+      const likelyPctEl = document.getElementById("likelyPct");
+      const stretchPctEl = document.getElementById("stretchPct");
+      const conservativeDeltaEl = document.getElementById("conservativeDelta");
+      const likelyDeltaEl = document.getElementById("likelyDelta");
+      const stretchDeltaEl = document.getElementById("stretchDelta");
+
+      const helpBtn = document.getElementById("helpBtn");
+
+      // ─────────────────────────────────────────────────────────────
+      // State
+      // ─────────────────────────────────────────────────────────────
+      let activeOrg = (BIBLE[qpOrg] ? qpOrg : "democo");
+
+      // ─────────────────────────────────────────────────────────────
+      // Helpers
+      // ─────────────────────────────────────────────────────────────
       const bandColor = {
         green: "text-emerald-300",
         amber: "text-amber-300",
+        yellow: "text-amber-300",
         gray: "text-slate-300",
         red: "text-rose-300"
       };
 
-      // ───────────────────────── Query param context ─────────────────────────
-      const params = new URLSearchParams(window.location.search || "");
-      const qpOrg = (params.get("org") || "democo").toLowerCase();
-      const qpDriver = params.get("driver") || "Key Tier-3 driver";
-      const qpKpi = params.get("kpi") || "Primary KPI";
-      const qpCampaign = params.get("campaign");
+      function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
 
-// ─────────────────────────────────────────────────────────────
-// DOM
-// ─────────────────────────────────────────────────────────────
-const orgLabel = document.getElementById("orgLabel");
-const driverNameLabel = document.getElementById("driverNameLabel");
-const kpiLabel = document.getElementById("kpiLabel");
-const campaignLabelWrapper = document.getElementById("campaignLabelWrapper");
-const campaignLabel = document.getElementById("campaignLabel");
-
-const reliabilityBadge = document.getElementById("reliabilityBadge");
-const reliabilityMeta = document.getElementById("reliabilityMeta");
-
-const orgPills = document.querySelectorAll(".org-pill");
-
-const baselineInput = document.getElementById("baselineRevenue");
-const liftSlider = document.getElementById("expectedLift");
-const liftLabel = document.getElementById("expectedLiftLabel");
-const bandSlider = document.getElementById("bandTightness");
-const bandLabel = document.getElementById("bandTightnessLabel");
-
-const conservativePctEl = document.getElementById("conservativePct");
-const likelyPctEl = document.getElementById("likelyPct");
-const stretchPctEl = document.getElementById("stretchPct");
-const conservativeDeltaEl = document.getElementById("conservativeDelta");
-const likelyDeltaEl = document.getElementById("likelyDelta");
-const stretchDeltaEl = document.getElementById("stretchDelta");
-
-const helpBtn = document.getElementById("helpBtn");
-
-let activeOrg = ORG_META[qpOrg] ? qpOrg : "democo";
-
-// ─────────────────────────────────────────────────────────────
-// Header context from query params
-// ─────────────────────────────────────────────────────────────
-driverNameLabel.textContent = qpDriver || "Key Tier-3 driver";
-kpiLabel.textContent = qpKpi || "Primary KPI";
-
-if (qpCampaign && qpCampaign.trim() && qpCampaign.toLowerCase() !== "all") {
-  campaignLabelWrapper.classList.remove("hidden");
-  campaignLabel.textContent = qpCampaign.trim();
-}
-
-// ─────────────────────────────────────────────────────────────
-// ORG pill UI
-// ─────────────────────────────────────────────────────────────
-function applyOrgPillsUI() {
-  orgPills.forEach(function (pill) {
-    pill.classList.remove(
-      "org-pill-active",
-      "bg-emerald-500",
-      "text-slate-950",
-      "shadow-sm",
-      "shadow-emerald-500/40"
-    );
-    pill.classList.add("text-slate-200");
-
-    if ((pill.dataset.org || "democo") === activeOrg) {
-      pill.classList.add(
-        "org-pill-active",
-        "bg-emerald-500",
-        "text-slate-950",
-        "shadow-sm",
-        "shadow-emerald-500/40"
-      );
-      pill.classList.remove("text-slate-200");
-    }
-  });
-}
-
-// ─────────────────────────────────────────────────────────────
-// Header + org meta (NO TIMELINE LOGIC)
-// ─────────────────────────────────────────────────────────────
-function updateHeaderMeta() {
-  const meta = ORG_META[activeOrg] || ORG_META.democo;
-
-  // Org label
-  orgLabel.textContent = meta.label;
-
-  // Reliability badge
-  reliabilityBadge.textContent = meta.reliability.label;
-  reliabilityBadge.className =
-    "font-semibold " + (bandColor[meta.reliability.band] || "text-slate-300");
-
-  reliabilityMeta.textContent =
-    "Cronbach’s α " +
-    meta.reliability.alpha.toFixed(2) +
-    " · n " +
-    meta.reliability.n.toLocaleString();
-
-  // Seed simulation inputs from org defaults
-  baselineInput.value = String(meta.baselineRevenue);
-  liftSlider.value = String(meta.liftCenter);
-  bandSlider.value = String(meta.bandWidth);
-
-  recalc();
-}
-
-
-      // ───────────────────────── Simulation math ─────────────────────────
       function fmtPct(val) { return (val * 100).toFixed(1) + "%"; }
       function fmtMoney(val) {
         if (!isFinite(val)) return "$0";
@@ -408,6 +348,109 @@ function updateHeaderMeta() {
         return "$" + rounded.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       }
 
+      function setQueryParamSilently(key, value) {
+        const p = new URLSearchParams(window.location.search || "");
+        if (value == null || value === "") p.delete(key);
+        else p.set(key, value);
+        const newUrl = window.location.pathname + "?" + p.toString();
+        window.history.replaceState({}, "", newUrl);
+      }
+
+      function applyOrgPillsUI() {
+        orgPills.forEach(function (pill) {
+          pill.classList.remove(
+            "org-pill-active",
+            "bg-emerald-500",
+            "text-slate-950",
+            "shadow-sm",
+            "shadow-emerald-500/40"
+          );
+          pill.classList.add("text-slate-200");
+
+          if ((pill.dataset.org || "democo") === activeOrg) {
+            pill.classList.add(
+              "org-pill-active",
+              "bg-emerald-500",
+              "text-slate-950",
+              "shadow-sm",
+              "shadow-emerald-500/40"
+            );
+            pill.classList.remove("text-slate-200");
+          }
+        });
+      }
+
+      function getOrgData(orgKey) {
+        return (BIBLE && BIBLE[orgKey]) ? BIBLE[orgKey] : (BIBLE.democo || null);
+      }
+
+      function pickDriver(orgData) {
+        const drivers = Array.isArray(orgData && orgData.drivers) ? orgData.drivers.slice() : [];
+        if (!drivers.length) return null;
+
+        // Prefer qpDriver if it matches
+        if (qpDriver) {
+          const hit = drivers.find(d => (d && (d.name || "")).toLowerCase() === qpDriver.toLowerCase());
+          if (hit) return hit;
+        }
+
+        // Else: highest r2
+        drivers.sort((a,b) => (b && typeof b.r2 === "number" ? b.r2 : 0) - (a && typeof a.r2 === "number" ? a.r2 : 0));
+        return drivers[0] || null;
+      }
+
+      // Convert driver strength into a default "center lift" (percent) consistent with Predictive page logic.
+      function defaultCenterLiftPct(driverR2, reliabilityBand) {
+        const r2 = (typeof driverR2 === "number") ? driverR2 : 0;
+        const band = (reliabilityBand === "yellow") ? "amber" : (reliabilityBand || "gray");
+
+        // driverScore proxy: cap .35 as "high" for demo
+        const driverScore = clamp(r2 / 0.35, 0, 1);
+
+        // Base center 3%–23% scaled by driverScore
+        let center = 0.03 + 0.20 * driverScore;
+
+        // Reliability gate dampening
+        if (band === "amber") center *= 0.7;
+        if (band === "gray") center *= 0.4;
+        if (band === "red") center *= 0.35;
+
+        // Clamp to slider domain 1–30%
+        return clamp(center * 100, 1, 30);
+      }
+
+      function defaultBandWidthPct(reliabilityBand) {
+        const band = (reliabilityBand === "yellow") ? "amber" : (reliabilityBand || "gray");
+        if (band === "green") return 25;   // tighter
+        if (band === "amber") return 30;   // default
+        return 45;                         // learning = wider
+      }
+
+      function seedBaselineRevenue(orgKey) {
+        // Baseline revenue is NOT in the Bible — seed for demo convenience only.
+        const map = {
+          democo: 180000,
+          hubspot: 240000,
+          salesforce: 120000,
+          all: 320000
+        };
+        return map[orgKey] || 180000;
+      }
+
+      // ─────────────────────────────────────────────────────────────
+      // Header context from query params
+      // ─────────────────────────────────────────────────────────────
+      driverNameLabel.textContent = qpDriver || "—";
+      kpiLabel.textContent = qpKpi || "Primary KPI";
+
+      if (qpCampaign && qpCampaign.trim() && qpCampaign.toLowerCase() !== "all") {
+        campaignLabelWrapper.classList.remove("hidden");
+        campaignLabel.textContent = qpCampaign.trim();
+      }
+
+      // ─────────────────────────────────────────────────────────────
+      // Simulation math
+      // ─────────────────────────────────────────────────────────────
       function recalc() {
         const baseline = parseFloat(baselineInput.value || "0") || 0;
         const centerPct = (parseFloat(liftSlider.value || "0") || 0) / 100;
@@ -432,20 +475,64 @@ function updateHeaderMeta() {
       liftSlider.addEventListener("input", recalc);
       bandSlider.addEventListener("input", recalc);
 
-      // ───────────────────────── Events ─────────────────────────
+      // ─────────────────────────────────────────────────────────────
+      // Render from Bible
+      // ─────────────────────────────────────────────────────────────
+      function render() {
+        const data = getOrgData(activeOrg);
+        if (!data) return;
+
+        const decision = data.decision || {};
+        const relBandRaw = String(decision.band || "gray").toLowerCase();
+        const relBand = (relBandRaw === "yellow") ? "amber" : relBandRaw;
+
+        const alpha = (typeof decision.alpha === "number") ? decision.alpha : null;
+        const n = (typeof decision.n === "number") ? decision.n : null;
+        const status = (decision.status || (relBand === "green" ? "Decision-Ready" : relBand === "amber" ? "Emerging" : "Learning"));
+
+        // Scope
+        orgLabel.textContent = (data.org_label || "Org");
+
+        // Reliability
+        reliabilityBadge.textContent = status;
+        reliabilityBadge.className = "font-semibold " + (bandColor[relBand] || "text-slate-300");
+        reliabilityMeta.textContent =
+          "Cronbach’s α " + (alpha != null ? alpha.toFixed(2) : "—") + " · n " + (n != null ? n.toLocaleString() : "—");
+
+        // Driver selection (and label)
+        const driver = pickDriver(data);
+        const driverName = (driver && driver.name) ? driver.name : "—";
+        const driverR2 = (driver && typeof driver.r2 === "number") ? driver.r2 : 0;
+
+        driverNameLabel.textContent = qpDriver || driverName;
+
+        // Seed inputs (baseline only if blank)
+        if (!baselineInput.value) baselineInput.value = String(seedBaselineRevenue(activeOrg));
+
+        // Set sliders from Bible-derived defaults
+        const centerLiftPct = defaultCenterLiftPct(driverR2, relBand);
+        const widthPct = defaultBandWidthPct(relBand);
+
+        liftSlider.value = String(Math.round(centerLiftPct));
+        bandSlider.value = String(widthPct);
+
+        recalc();
+
+        // Keep URL in sync
+        setQueryParamSilently("org", activeOrg);
+        if (qpDriver || driverName) setQueryParamSilently("driver", (qpDriver || driverName));
+        if (qpKpi) setQueryParamSilently("kpi", qpKpi);
+        if (qpCampaign) setQueryParamSilently("campaign", qpCampaign);
+      }
+
+      // ─────────────────────────────────────────────────────────────
+      // Events
+      // ─────────────────────────────────────────────────────────────
       orgPills.forEach(function (btn) {
         btn.addEventListener("click", function () {
           activeOrg = (btn.getAttribute("data-org") || "democo").toLowerCase();
           applyOrgPillsUI();
-          updateHeaderMeta();
-        });
-      });
-
-      timelinePills.forEach(function (btn) {
-        btn.addEventListener("click", function () {
-          activeTimeline = (btn.getAttribute("data-timeline") || "production").toLowerCase();
-          applyTimelineUI();
-          updateHeaderMeta();
+          render();
         });
       });
 
@@ -454,16 +541,16 @@ function updateHeaderMeta() {
 `This ROI Simulation Engine is a planning tool.
 
 • Start with a baseline revenue window (e.g., last 30 days).
-• Use the sliders to explore directional lift bands.
-• If Reliability is green, you can treat these as decision-grade planning ranges.
-• If Reliability is emerging/learning, use bands to size experiments and guardrails — not forecasts.`
+• Defaults are seeded from the VEI Bible: Reliability (α / n / band) + strongest Tier-3 driver strength (R²).
+• Use sliders to explore lift bands.
+• Green Reliability = decision-grade planning ranges.
+• Amber/Gray = directional only; use to size experiments + guardrails, not forecasts.`
         );
       });
 
-      // Initial state from query params
+      // Init
       applyOrgPillsUI();
-      applyTimelineUI();
-      updateHeaderMeta();
+      render();
     })();
   </script>
 </body>

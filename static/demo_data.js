@@ -1,5 +1,16 @@
 // athenami_demo/static/demo_data.js
 // Central demo dataset for Actions (org-aware). Keep this reusable later for predictive/clusters/simulation.
+//
+// IMPORTANT (global doctrine for this demo build):
+// - band tokens are intentionally kept as: green | yellow | gray
+//   because multiple pages already map these exact strings to colors.
+// - Conceptually, interpret these as:
+//     green  = Decision-Ready (decision-grade)
+//     yellow = Emerging Signal (business-friendly "Amber")
+//     gray   = Learning / Insufficient (business-friendly "Red")
+//
+// This file is the single source of truth ("bible") for org-level demo facts.
+// Renderers (actions/dashboard/predictive/etc.) should *read* from here, not recompute truth.
 
 window.DEMO_ACTIONS_DATA = {
   democo: {
@@ -47,6 +58,7 @@ window.DEMO_ACTIONS_DATA = {
 
   hubspot: {
     org_label: "HubSpot",
+    // Emerging (Amber concept): useful guidance + experiment steering, but not decision-grade
     decision: { status: "Emerging Signal", band: "yellow", n: 420, alpha: 0.66 },
     drivers: [
       { name: "Clarity", r2: 0.18, n: 410, reliable: false },
@@ -77,7 +89,8 @@ window.DEMO_ACTIONS_DATA = {
 
   salesforce: {
     org_label: "Salesforce",
-    decision: { status: "Directional Only", band: "gray", n: 95, alpha: 0.52 },
+    // Learning (Red concept): clearly not decision-grade; show *some* guidance but emphasize collection
+    decision: { status: "Learning Signal", band: "gray", n: 95, alpha: 0.52 },
     drivers: [
       { name: "Trust", r2: 0.09, n: 95, reliable: false },
       { name: "ROI Intent", r2: 0.06, n: 80, reliable: false },
@@ -105,16 +118,17 @@ window.DEMO_ACTIONS_DATA = {
   },
 
   all: {
-    org_label: "All orgs",
-    decision: { status: "Mixed Signal", band: "yellow", n: 3195, alpha: 0.69 },
+    org_label: "All orgs (pooled)",
+    // Pooled view = aggregate of the three orgs. Higher n, but α still not decision-grade -> Emerging.
+    decision: { status: "Pooled Signal", band: "yellow", n: 3195, alpha: 0.69 },
     drivers: [
-      { name: "Trust", r2: 0.21, n: 2115, reliable: true },
-      { name: "Clarity", r2: 0.19, n: 1990, reliable: true },
-      { name: "ROI Intent", r2: 0.14, n: 1800, reliable: true }
+      { name: "Trust", r2: 0.21, n: 2115, reliable: false },
+      { name: "Clarity", r2: 0.19, n: 1990, reliable: false },
+      { name: "ROI Intent", r2: 0.14, n: 1800, reliable: false }
     ],
     psychographics: {
-      profile_name: "Mixed Signal Segment",
-      profile_description: "A blended audience; segmenting follow-ups will outperform blasting.",
+      profile_name: "Blended Audience",
+      profile_description: "A mixed pool; segmenting follow-ups will outperform blasting a single message.",
       constructs: [
         { label: "Trust", mean: 5.5 },
         { label: "Clarity", mean: 5.1 },
@@ -142,7 +156,9 @@ window.DEMO_ACTIONS_DATA = {
  * Rules:
  * - Each org has a base Tier-3 volume: decision.n
  * - Driver n's become a consistent proportion of baseN (primary > secondary > tertiary)
- * - Reliable is computed consistently from alpha + driver n (demo plausibility)
+ * - "reliable" is computed consistently from alpha + driver n (demo plausibility)
+ *
+ * NOTE: This ONLY normalizes counts + reliability flags. It does NOT change r2, means, segments, or recommendations.
  */
 (function normalizeDemoActionsData() {
   const ratioDefaults = [0.90, 0.82, 0.72]; // primary/secondary/tertiary proportions of decision.n

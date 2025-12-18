@@ -180,7 +180,8 @@
         <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
           <h2 class="text-sm font-semibold tracking-wide text-slate-100">Construct Distributions</h2>
           <p class="mt-1 text-[11px] text-slate-400">
-            Quick sanity check: are segments carving meaningful differences, or just re-labeling a tight cluster?
+            Shows how responses are distributed across each construct, and how strongly segments differ from one another.
+
           </p>
 
           <div id="distGrid" class="mt-4 grid grid-cols-1 gap-3">
@@ -188,7 +189,8 @@
           </div>
 
           <p class="mt-4 text-[11px] text-slate-400">
-            Scale: 1–7 Likert. Use distributions + reliability gate before you “act like this is truth.”
+            Scale: 1–7 Likert. Interpret alongside Decision Readiness when prioritizing experiments.
+
           </p>
         </div>
 
@@ -224,6 +226,9 @@
     </div>
   </div>
 
+  <!-- ✅ THE BIBLE -->
+  <script src="./static/demo_data.js"></script>
+
   <script>
     (function () {
       // ─────────────────────────────────────────────────────────────
@@ -232,228 +237,6 @@
       const params = new URLSearchParams(window.location.search || "");
       const qpOrg = (params.get("org") || "democo").toLowerCase();
       const qpCampaign = (params.get("campaign") || "vip").trim();
-
-      // ─────────────────────────────────────────────────────────────
-      // Demo data (align to your "bible" reliability bands)
-      // ─────────────────────────────────────────────────────────────
-      // Notes:
-      // - DemoCo: α 0.68, n 280 (Emerging)
-      // - HubSpot: α 0.66, n 420 (Emerging)
-      // - Salesforce: α 0.55, n 42 (Learning)
-      // - All: α 0.74, n 120 (Decision-Ready)  <-- matches your earlier "all" narrative
-      const DEMO = {
-        democo: {
-          label: "DemoCo",
-          campaign: "vip",
-          reliability: { band: "amber", label: "Emerging", alpha: 0.68, n: 280,
-            body: "Signals are consistent enough to guide controlled experiments, but not yet locked for high-stakes planning. Treat segments as directional, and validate with A/B tests."
-          },
-          algorithm: "kmeans-lite (Tier-3 centroid split)",
-          respondents: 280,
-          distributions: {
-            trust: { mean: 5.6, min: 3.8, max: 6.7 },
-            clarity: { mean: 4.9, min: 3.4, max: 6.3 },
-            motivation: { mean: 5.3, min: 3.6, max: 6.6 },
-            roi_intent: { mean: 5.0, min: 3.2, max: 6.5 }
-          },
-          segments: [
-            {
-              id: "A",
-              label: "Confident Converts",
-              share: 0.56,
-              n: 157,
-              primary_pattern: "high_trust_high_roi",
-              psych_description: "They already believe you. Their conversion is mainly blocked by small friction (timing, offer clarity, and one missing proof point).",
-              centroid: { trust: 6.2, clarity: 5.0, motivation: 5.8, roi_intent: 5.9 },
-              quick_actions: [
-                "Push a shorter CTA path (reduce steps, reduce uncertainty).",
-                "Add a single strong proof asset (benchmark, customer logo, or quantified outcome).",
-                "Use scarcity/time-boxing carefully — they respond, but hate gimmicks."
-              ]
-            },
-            {
-              id: "B",
-              label: "Skeptical Researchers",
-              share: 0.31,
-              n: 87,
-              primary_pattern: "low_clarity_high_motivation",
-              psych_description: "They want the outcome, but don’t trust the path yet. They need clarity + safety signals before they move.",
-              centroid: { trust: 4.6, clarity: 4.1, motivation: 5.6, roi_intent: 4.4 },
-              quick_actions: [
-                "Lead with a 3-bullet “How it works” + constraints (reduce ambiguity).",
-                "Offer risk reversal (pilot, guarantee, or clear exit).",
-                "Use comparison framing: why this vs. their default approach."
-              ]
-            },
-            {
-              id: "C",
-              label: "Polite Passives",
-              share: 0.13,
-              n: 36,
-              primary_pattern: "low_motivation_low_roi",
-              psych_description: "They’re not opposed — they’re unconvinced it matters. They require a sharper problem framing or a more specific outcome.",
-              centroid: { trust: 5.1, clarity: 5.0, motivation: 4.1, roi_intent: 3.8 },
-              quick_actions: [
-                "Reframe the pain: quantify cost of inaction (time, money, risk).",
-                "Target narrower use-cases (one job-to-be-done, one persona).",
-                "Stop over-nurturing; move them to a low-frequency track."
-              ]
-            }
-          ]
-        },
-
-        hubspot: {
-          label: "HubSpot",
-          campaign: "vip",
-          reliability: { band: "amber", label: "Emerging", alpha: 0.66, n: 420,
-            body: "Useful segmentation patterns are forming. Use this to tailor copy and prioritize experiments, but treat lift claims as directional until reliability stabilizes."
-          },
-          algorithm: "kmeans-lite (Tier-3 centroid split)",
-          respondents: 420,
-          distributions: {
-            trust: { mean: 5.1, min: 3.3, max: 6.6 },
-            clarity: { mean: 4.7, min: 3.1, max: 6.2 },
-            motivation: { mean: 5.0, min: 3.2, max: 6.5 },
-            roi_intent: { mean: 4.6, min: 2.9, max: 6.3 }
-          },
-          segments: [
-            {
-              id: "A",
-              label: "Workflow Believers",
-              share: 0.49,
-              n: 206,
-              primary_pattern: "high_clarity_high_trust",
-              psych_description: "They understand the workflow and feel safe adopting — the main lever is highlighting measurable outcomes.",
-              centroid: { trust: 5.8, clarity: 5.5, motivation: 5.2, roi_intent: 5.1 },
-              quick_actions: [
-                "Make ROI explicit (before/after benchmark, time saved).",
-                "Offer a template or “starter kit” to reduce setup work.",
-                "Use product screenshots that match their mental model."
-              ]
-            },
-            {
-              id: "B",
-              label: "Outcome Seekers",
-              share: 0.37,
-              n: 155,
-              primary_pattern: "high_motivation_mid_clarity",
-              psych_description: "They want results fast but don’t fully understand the mechanism. Their lever is clarity + proof sequencing.",
-              centroid: { trust: 4.9, clarity: 4.1, motivation: 5.8, roi_intent: 4.7 },
-              quick_actions: [
-                "Move proof earlier (case study first, details second).",
-                "Add a 30-second “what you get” summary above the fold.",
-                "Use an implementation promise (weeks, not months)."
-              ]
-            },
-            {
-              id: "C",
-              label: "Cautious Evaluators",
-              share: 0.14,
-              n: 59,
-              primary_pattern: "mid_trust_low_roi",
-              psych_description: "They’re open, but unsure the payoff is worth switching. They need sharper differentiation and migration safety.",
-              centroid: { trust: 5.2, clarity: 4.6, motivation: 4.3, roi_intent: 3.9 },
-              quick_actions: [
-                "Address switching costs directly (migration, integration, training).",
-                "Show “compatibility with current stack” (reduce perceived risk).",
-                "Offer a small pilot outcome within 2 weeks."
-              ]
-            }
-          ]
-        },
-
-        salesforce: {
-          label: "Salesforce",
-          campaign: "vip",
-          reliability: { band: "gray", label: "Learning", alpha: 0.55, n: 42,
-            body: "Too few Tier-3 responses to trust segment boundaries. This view is exploratory only — collect more Tier-3 before acting confidently."
-          },
-          algorithm: "fallback (median split)",
-          respondents: 42,
-          distributions: {
-            trust: { mean: 5.0, min: 4.0, max: 6.2 },
-            clarity: { mean: 4.4, min: 3.6, max: 5.6 },
-            motivation: { mean: 4.8, min: 3.7, max: 6.0 },
-            roi_intent: { mean: 4.2, min: 3.1, max: 5.6 }
-          },
-          segments: [
-            {
-              id: "A",
-              label: "Single Cluster (early sample)",
-              share: 1.00,
-              n: 42,
-              primary_pattern: "insufficient_sample",
-              psych_description: "With n=42, VeriTechIQ collapses profiles into a single exploratory cluster to avoid false segmentation.",
-              centroid: { trust: 5.0, clarity: 4.4, motivation: 4.8, roi_intent: 4.2 },
-              quick_actions: [
-                "Collect Tier-3: target +60 responses to begin stable segmentation.",
-                "In the meantime, run 1–2 broad message variants (clarity-first vs proof-first).",
-                "Use Tier-2 open text to discover unknown objections."
-              ]
-            }
-          ]
-        },
-
-        all: {
-          label: "All orgs",
-          campaign: "vip",
-          reliability: { band: "green", label: "Decision-Ready", alpha: 0.74, n: 120,
-            body: "Aggregate segments are stable enough for planning conversations. Still validate in-org before major bets, but this is a decision-grade signal for prioritization."
-          },
-          algorithm: "aggregate clustering (Tier-3)",
-          respondents: 120,
-          distributions: {
-            trust: { mean: 5.4, min: 3.6, max: 6.6 },
-            clarity: { mean: 4.8, min: 3.3, max: 6.2 },
-            motivation: { mean: 5.2, min: 3.5, max: 6.5 },
-            roi_intent: { mean: 4.8, min: 3.0, max: 6.3 }
-          },
-          segments: [
-            {
-              id: "A",
-              label: "Proof-Driven Buyers",
-              share: 0.52,
-              n: 62,
-              primary_pattern: "trust_drives_roi",
-              psych_description: "Across orgs, trust is the strongest lever: when proof lands, ROI-Intent follows.",
-              centroid: { trust: 6.0, clarity: 4.8, motivation: 5.4, roi_intent: 5.4 },
-              quick_actions: [
-                "Standardize proof blocks (case study, benchmark, logos).",
-                "Quantify ROI in the first 2 scrolls.",
-                "Use consistent claims across channels (reduce cognitive dissonance)."
-              ]
-            },
-            {
-              id: "B",
-              label: "Clarity-First Adopters",
-              share: 0.34,
-              n: 41,
-              primary_pattern: "clarity_unblocks_trust",
-              psych_description: "They need to understand the mechanism first. When clarity rises, trust stops being the bottleneck.",
-              centroid: { trust: 5.0, clarity: 5.6, motivation: 5.1, roi_intent: 4.6 },
-              quick_actions: [
-                "Lead with “how it works” before the pitch.",
-                "Use diagrams/screenshots (remove ambiguity).",
-                "Clarify what’s NOT included (reduces fear)."
-              ]
-            },
-            {
-              id: "C",
-              label: "Low-Intent Noise",
-              share: 0.14,
-              n: 17,
-              primary_pattern: "low_roi_intent",
-              psych_description: "A small slice is simply low intent. The move is to suppress frequency and stop distorting your funnel narrative.",
-              centroid: { trust: 4.8, clarity: 4.3, motivation: 4.0, roi_intent: 3.4 },
-              quick_actions: [
-                "Reduce sends / retargeting frequency.",
-                "Route to education track (monthly).",
-                "Focus experiments on higher-intent segments."
-              ]
-            }
-          ]
-        }
-      };
 
       // ─────────────────────────────────────────────────────────────
       // DOM
@@ -476,7 +259,8 @@
       // ─────────────────────────────────────────────────────────────
       // State
       // ─────────────────────────────────────────────────────────────
-      let activeOrg = (DEMO[qpOrg] ? qpOrg : "democo");
+      const BIBLE = (window.DEMO_ACTIONS_DATA || {});
+      let activeOrg = (BIBLE[qpOrg] ? qpOrg : "democo");
       let activeCampaign = qpCampaign || "vip";
 
       // ─────────────────────────────────────────────────────────────
@@ -485,21 +269,12 @@
       const bandColors = {
         green: { badge: "bg-emerald-500/20 border border-emerald-400/70 text-emerald-200", dot: "bg-emerald-400", label: "Decision-Ready" },
         amber: { badge: "bg-amber-500/20 border border-amber-400/80 text-amber-200", dot: "bg-amber-300", label: "Emerging" },
+        yellow:{ badge: "bg-amber-500/20 border border-amber-400/80 text-amber-200", dot: "bg-amber-300", label: "Emerging" }, // legacy -> amber
         red:   { badge: "bg-rose-500/20 border border-rose-400/80 text-rose-200", dot: "bg-rose-400", label: "Weak" },
         gray:  { badge: "bg-slate-700/40 border border-slate-500/80 text-slate-200", dot: "bg-slate-400", label: "Learning" }
       };
 
-      function applyOrgPillsUI() {
-        orgPills.forEach(function (pill) {
-          pill.classList.remove("bg-emerald-500","text-slate-950","shadow-sm","shadow-emerald-500/40");
-          pill.classList.add("text-slate-200");
-          if ((pill.dataset.org || "democo") === activeOrg) {
-            pill.classList.add("bg-emerald-500","text-slate-950","shadow-sm","shadow-emerald-500/40");
-            pill.classList.remove("text-slate-200");
-          }
-        });
-      }
-
+      function clamp(x, lo, hi) { return Math.max(lo, Math.min(hi, x)); }
       function fmtPct(x) {
         const n = Number(x);
         if (!isFinite(n)) return "—";
@@ -515,10 +290,230 @@
         if (!isFinite(n)) return "—";
         return n.toFixed(2);
       }
+      function escapeHtml(str) {
+        return String(str == null ? "" : str)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function applyOrgPillsUI() {
+        orgPills.forEach(function (pill) {
+          pill.classList.remove("bg-emerald-500","text-slate-950","shadow-sm","shadow-emerald-500/40");
+          pill.classList.add("text-slate-200");
+          if ((pill.dataset.org || "democo") === activeOrg) {
+            pill.classList.add("bg-emerald-500","text-slate-950","shadow-sm","shadow-emerald-500/40");
+            pill.classList.remove("text-slate-200");
+          }
+        });
+      }
+
+      function setQueryParamSilently(key, value) {
+        const p = new URLSearchParams(window.location.search || "");
+        if (value == null || value === "") p.delete(key);
+        else p.set(key, value);
+        const newUrl = window.location.pathname + "?" + p.toString();
+        window.history.replaceState({}, "", newUrl);
+      }
+
+      // ─────────────────────────────────────────────────────────────
+      // Copy/derive from bible
+      // ─────────────────────────────────────────────────────────────
+      function getOrgData(orgKey) {
+        return (BIBLE && BIBLE[orgKey]) ? BIBLE[orgKey] : (BIBLE.democo || null);
+      }
+
+      function deriveDistributions(constructs) {
+        // Use mean from bible, synthesize min/max as plausible spread (demo-only, consistent)
+        // mean ± 1.7 (clamped to 1..7)
+        const out = {};
+        (constructs || []).forEach(c => {
+          const label = String(c.label || "").toLowerCase();
+          const mean = (typeof c.mean === "number") ? c.mean : null;
+          if (mean == null) return;
+          const min = clamp(mean - 1.7, 1.0, 7.0);
+          const max = clamp(mean + 1.7, 1.0, 7.0);
+          out[label] = { mean, min, max };
+        });
+        return {
+          trust: out.trust || null,
+          clarity: out.clarity || null,
+          motivation: out.motivation || null,
+          roi_intent: out["roi intent"] || out.roi || out.roi_intent || null
+        };
+      }
+
+      // Segment action “library” (keeps it feeling real, while names/shares come from bible)
+      function actionPackForLabel(label) {
+        const key = String(label || "").toLowerCase();
+
+        if (key.includes("motivated value seekers") || key.includes("value seekers")) {
+          return [
+            "Lead with a concrete outcome (before/after, benchmark, or specific result).",
+            "Make the CTA path short and unambiguous (one ask, one next step).",
+            "Use urgency carefully (time-boxing that feels real, not gimmicky)."
+          ];
+        }
+        if (key.includes("analytical skeptics") || key.includes("skeptics")) {
+          return [
+            "Move proof earlier (logos, quantified outcomes, or credible third-party signal).",
+            "Add a 3-bullet “How it works” + what happens next (reduce ambiguity).",
+            "Add risk reversal (pilot, guarantee, clear exit) near CTA."
+          ];
+        }
+        if (key.includes("confused but curious")) {
+          return [
+            "Tighten to one promise + one ask (remove competing links).",
+            "Add a 2-step “how it works” (Step 1 / Step 2 + timeline).",
+            "Use a single proof strip above CTA (reduce perceived risk)."
+          ];
+        }
+        if (key.includes("early-but-skeptical")) {
+          return [
+            "Add explicit reassurance + next steps (what happens after the click).",
+            "Use comparison framing (why this vs their default approach).",
+            "Keep collecting Tier-3; treat as directional until readiness improves."
+          ];
+        }
+
+        // Default
+        return [
+          "Run one controlled change for this segment and measure lift.",
+          "Use clarity + proof sequencing to reduce friction.",
+          "Collect more Tier-3 to sharpen boundaries and tighten lift bands."
+        ];
+      }
+
+      function deriveSegmentsFromBible(orgKey, decisionN, constructs, bibleSegments) {
+        // Use bible segment labels + shares as the source of truth.
+        // Enforce Salesforce rule: collapse to 1 segment regardless of bible.
+        const meanBy = {};
+        (constructs || []).forEach(c => { meanBy[String(c.label || "").toLowerCase()] = c.mean; });
+
+        const baseCentroid = {
+          trust: meanBy.trust,
+          clarity: meanBy.clarity,
+          motivation: meanBy.motivation,
+          roi_intent: meanBy["roi intent"] ?? meanBy.roi_intent
+        };
+
+        const segs = Array.isArray(bibleSegments) ? bibleSegments.slice(0) : [];
+
+        if (orgKey === "salesforce") {
+          return [{
+            id: "A",
+            label: "Single Cluster (early sample)",
+            share: 1.0,
+            n: decisionN,
+            primary_pattern: "insufficient_sample",
+            psych_description: "With limited Tier-3 volume, VeriTechIQ collapses segmentation into a single exploratory cluster to avoid false precision.",
+            centroid: {
+              trust: baseCentroid.trust,
+              clarity: baseCentroid.clarity,
+              motivation: baseCentroid.motivation,
+              roi_intent: baseCentroid.roi_intent
+            },
+            quick_actions: [
+              "Collect Tier-3: target +60 responses to begin stable segmentation.",
+              "In the meantime, run 1–2 broad variants (clarity-first vs proof-first).",
+              "Use Tier-2 open text to discover unknown objections."
+            ]
+          }];
+        }
+
+        // If bible has 0/1 segments, still show something coherent
+        if (segs.length <= 1) {
+          const only = segs[0] || { label: "Single Segment", share: 1.0, note: "" };
+          return [{
+            id: "A",
+            label: only.label || "Single Segment",
+            share: 1.0,
+            n: decisionN,
+            primary_pattern: "single_segment",
+            psych_description: only.note || "A single coherent profile for this scope.",
+            centroid: {
+              trust: baseCentroid.trust,
+              clarity: baseCentroid.clarity,
+              motivation: baseCentroid.motivation,
+              roi_intent: baseCentroid.roi_intent
+            },
+            quick_actions: actionPackForLabel(only.label)
+          }];
+        }
+
+        // For others: map the bible segment shares directly
+        const out = segs.map((s, idx) => {
+          const share = (typeof s.share === "number") ? s.share : (1 / segs.length);
+          const n = Math.max(1, Math.round(decisionN * share));
+          const id = idx === 0 ? "A" : idx === 1 ? "B" : "C";
+
+          // Slight centroid nudges so cards don't look copy/paste, while staying centered on org means
+          const wiggle = (idx === 0 ? 0.4 : idx === 1 ? -0.4 : 0.0);
+          const centroid = {
+            trust: isFinite(baseCentroid.trust) ? clamp(baseCentroid.trust + wiggle, 1, 7) : baseCentroid.trust,
+            clarity: isFinite(baseCentroid.clarity) ? clamp(baseCentroid.clarity + (idx === 0 ? 0.2 : -0.3), 1, 7) : baseCentroid.clarity,
+            motivation: isFinite(baseCentroid.motivation) ? clamp(baseCentroid.motivation + (idx === 1 ? 0.3 : -0.1), 1, 7) : baseCentroid.motivation,
+            roi_intent: isFinite(baseCentroid.roi_intent) ? clamp(baseCentroid.roi_intent + (idx === 0 ? 0.3 : -0.2), 1, 7) : baseCentroid.roi_intent
+          };
+
+          return {
+            id,
+            label: s.label || ("Segment " + id),
+            share,
+            n,
+            primary_pattern: (s.label || "").toLowerCase().replace(/\s+/g, "_"),
+            psych_description: s.note || "",
+            centroid,
+            quick_actions: actionPackForLabel(s.label)
+          };
+        });
+
+        // Ensure n sums exactly to decisionN (demo polish)
+        const sum = out.reduce((a, s) => a + (s.n || 0), 0);
+        const diff = decisionN - sum;
+        if (out.length && diff !== 0) out[0].n = Math.max(1, out[0].n + diff);
+
+        return out;
+      }
+
+      function distRow(label, d) {
+        const mean = d && isFinite(d.mean) ? fmt1(d.mean) : "—";
+        const min = d && isFinite(d.min) ? fmt1(d.min) : "—";
+        const max = d && isFinite(d.max) ? fmt1(d.max) : "—";
+
+        return `
+          <div class="rounded-xl border border-slate-800 bg-slate-950/30 p-3">
+            <div class="text-xs font-semibold text-slate-100">${escapeHtml(label)}</div>
+            <div class="mt-2 flex items-center justify-between text-[12px] text-slate-300">
+              <span>μ <span class="font-semibold text-slate-100 tabular-nums">${escapeHtml(mean)}</span></span>
+              <span class="text-slate-400">min <span class="tabular-nums">${escapeHtml(min)}</span> · max <span class="tabular-nums">${escapeHtml(max)}</span></span>
+            </div>
+          </div>
+        `;
+      }
+
+      function scorePill(label, val) {
+        const v = Number(val);
+        const txt = isFinite(v) ? v.toFixed(1) : "—";
+        const cls =
+          !isFinite(v) ? "border-slate-700 text-slate-300"
+          : v >= 5.6 ? "border-emerald-500/40 text-emerald-200"
+          : v >= 4.7 ? "border-sky-500/40 text-sky-200"
+          : "border-amber-500/40 text-amber-200";
+
+        return `
+          <div class="rounded-xl border ${cls} bg-slate-950/40 px-3 py-2">
+            <div class="text-[10px] uppercase tracking-wide text-slate-400 font-semibold">${escapeHtml(label)}</div>
+            <div class="mt-0.5 text-lg font-semibold tabular-nums">${escapeHtml(txt)}</div>
+          </div>
+        `;
+      }
 
       function patternLabel(code) {
         if (!code) return "Pattern";
-        return code.replace(/_/g, " ").replace(/\b\w/g, (m) => m.toUpperCase());
+        return String(code).replace(/_/g, " ").replace(/\b\w/g, (m) => m.toUpperCase());
       }
 
       function segmentCard(seg, relBand) {
@@ -570,88 +565,75 @@
         `;
       }
 
-      function scorePill(label, val) {
-        const v = Number(val);
-        const txt = isFinite(v) ? v.toFixed(1) : "—";
-        // light heuristic coloring: high >=5.6 green, mid >=4.7 sky, else amber
-        const cls =
-          !isFinite(v) ? "border-slate-700 text-slate-300"
-          : v >= 5.6 ? "border-emerald-500/40 text-emerald-200"
-          : v >= 4.7 ? "border-sky-500/40 text-sky-200"
-          : "border-amber-500/40 text-amber-200";
+      function reliabilityBodyFor(decisionStatus, bandKey) {
+        const s = String(decisionStatus || "").toLowerCase();
+        const band = String(bandKey || "").toLowerCase();
 
-        return `
-          <div class="rounded-xl border ${cls} bg-slate-950/40 px-3 py-2">
-            <div class="text-[10px] uppercase tracking-wide text-slate-400 font-semibold">${escapeHtml(label)}</div>
-            <div class="mt-0.5 text-lg font-semibold tabular-nums">${escapeHtml(txt)}</div>
-          </div>
-        `;
-      }
+        if (band === "green") {
+          return "Signals are stable enough for planning conversations. Use segments to prioritize and design changes, then validate with controlled tests.";
+        }
+        if (band === "yellow" || band === "amber") {
+          return "Patterns are forming. Use this to tailor copy and steer experiments, but treat lift claims as directional until reliability stabilizes.";
+        }
+        if (band === "gray") {
+          return "Too few Tier-3 responses to trust segment boundaries. Treat this view as exploratory only — keep collecting Tier-3 before acting confidently.";
+        }
+        if (band === "red") {
+          return "Signals are weak/unstable for segmentation. Collect more verified Tier-3 before using this for decision-making.";
+        }
 
-      function distRow(label, d) {
-        const mean = d && isFinite(d.mean) ? fmt1(d.mean) : "—";
-        const min = d && isFinite(d.min) ? fmt1(d.min) : "—";
-        const max = d && isFinite(d.max) ? fmt1(d.max) : "—";
-
-        return `
-          <div class="rounded-xl border border-slate-800 bg-slate-950/30 p-3">
-            <div class="text-xs font-semibold text-slate-100">${escapeHtml(label)}</div>
-            <div class="mt-2 flex items-center justify-between text-[12px] text-slate-300">
-              <span>μ <span class="font-semibold text-slate-100 tabular-nums">${escapeHtml(mean)}</span></span>
-              <span class="text-slate-400">min <span class="tabular-nums">${escapeHtml(min)}</span> · max <span class="tabular-nums">${escapeHtml(max)}</span></span>
-            </div>
-          </div>
-        `;
-      }
-
-      function escapeHtml(str) {
-        return String(str == null ? "" : str)
-          .replaceAll("&", "&amp;")
-          .replaceAll("<", "&lt;")
-          .replaceAll(">", "&gt;")
-          .replaceAll('"', "&quot;")
-          .replaceAll("'", "&#039;");
-      }
-
-      function setQueryParamSilently(key, value) {
-        const p = new URLSearchParams(window.location.search || "");
-        if (value == null || value === "") p.delete(key);
-        else p.set(key, value);
-        const newUrl = window.location.pathname + "?" + p.toString();
-        window.history.replaceState({}, "", newUrl);
+        // fallback on status words
+        if (s.includes("decision")) return "Signals are stable enough for planning conversations. Validate with tests, then scale.";
+        if (s.includes("emerging")) return "Use as hypothesis fuel while collecting more Tier-3.";
+        if (s.includes("learning") || s.includes("directional")) return "Exploratory only — collect more Tier-3.";
+        return "—";
       }
 
       // ─────────────────────────────────────────────────────────────
       // Render
       // ─────────────────────────────────────────────────────────────
       function render() {
-        const bundle = DEMO[activeOrg] || DEMO.democo;
+        const data = getOrgData(activeOrg);
+        if (!data) return;
 
-        // Scope line
-        scopeOrg.textContent = bundle.label || "—";
-        scopeCampaign.textContent = activeCampaign || bundle.campaign || "vip";
+        const orgLabel = data.org_label || activeOrg;
+        const decision = data.decision || {};
+        const psych = data.psychographics || {};
+        const constructs = Array.isArray(psych.constructs) ? psych.constructs : [];
+        const bibleSegments = Array.isArray(psych.segments) ? psych.segments : [];
+
+        const band = String(decision.band || "gray").toLowerCase(); // green/yellow/gray/red
+        const alpha = (typeof decision.alpha === "number") ? decision.alpha : null;
+        const n = (typeof decision.n === "number") ? decision.n : null;
+        const status = decision.status || (band === "green" ? "Decision-Ready" : band === "gray" ? "Learning Signal" : "Emerging Signal");
+
+        // Scope
+        scopeOrg.textContent = orgLabel;
+        scopeCampaign.textContent = activeCampaign || "vip";
 
         // Reliability badge + meta
-        const r = bundle.reliability || { band: "gray", label: "Learning", alpha: null, n: null, body: "" };
-        const b = bandColors[r.band] || bandColors.gray;
+        const bandKey = (band === "yellow") ? "amber" : band;
+        const b = bandColors[bandKey] || bandColors.gray;
 
         reliabilityBadge.className =
           "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium uppercase tracking-wide " + b.badge;
 
         reliabilityBadge.innerHTML =
-          `<span class="h-2 w-2 rounded-full ${b.dot}"></span><span>${escapeHtml(r.label || b.label)}</span>`;
+          `<span class="h-2 w-2 rounded-full ${b.dot}"></span><span>${escapeHtml(b.label)}</span>`;
 
-        reliabilityBody.textContent = r.body || "—";
+        reliabilityBody.textContent = reliabilityBodyFor(status, bandKey);
         reliabilityMeta.textContent =
-          "Cronbach’s α: " + (r.alpha != null ? fmt2(r.alpha) : "—") +
-          " · Tier-3 n: " + (r.n != null ? Number(r.n).toLocaleString() : "—") +
-          " · Algorithm: " + (bundle.algorithm || "—");
+          "Cronbach’s α: " + (alpha != null ? fmt2(alpha) : "—") +
+          " · Tier-3 n: " + (n != null ? Number(n).toLocaleString() : "—") +
+          " · Algorithm: " + (bandKey === "green" ? "kmeans-lite (Tier-3 centroid split)" : bandKey === "amber" ? "kmeans-lite (Tier-3 centroid split)" : "fallback (median split)");
 
-        // Respondents
-        nRespondents.textContent = (bundle.respondents || 0).toLocaleString() + " respondents";
+        // Respondents line (use Tier-3 n, not some separate number)
+        nRespondents.textContent = (n != null ? n.toLocaleString() : "—") + " respondents";
 
-        // Segments
-        const segs = Array.isArray(bundle.segments) ? bundle.segments : [];
+        // Segments (derived from bible)
+        const decisionN = (n != null ? n : 0);
+        const segs = deriveSegmentsFromBible(activeOrg, decisionN, constructs, bibleSegments);
+
         if (!segs.length) {
           segmentsWrap.innerHTML = `
             <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
@@ -660,11 +642,11 @@
             </div>
           `;
         } else {
-          segmentsWrap.innerHTML = segs.map(s => segmentCard(s, r.band)).join("");
+          segmentsWrap.innerHTML = segs.map(s => segmentCard(s, bandKey)).join("");
         }
 
-        // Distributions
-        const d = bundle.distributions || {};
+        // Distributions (derived from bible means)
+        const d = deriveDistributions(constructs);
         distGrid.innerHTML = [
           distRow("Trust", d.trust),
           distRow("Clarity", d.clarity),

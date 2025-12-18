@@ -627,30 +627,39 @@
       };
     }
 
-    // ================================
-    // ✅ Confidence badge from Actions decision band (green/yellow/gray)
-    // ================================
-    async function fetchPredictiveDrivers() {
-      params();
-      const a = getActions(currentOrg);
-      const band = (a && a.decision && a.decision.band) ? String(a.decision.band).toLowerCase() : 'gray';
-      const total = (a && a.decision && typeof a.decision.n === 'number') ? a.decision.n : 0;
+// ================================
+// ✅ Confidence badge from Actions decision band (green / amber / gray)
+// ================================
+async function fetchPredictiveDrivers() {
+  params();
+  const a = getActions(currentOrg);
+  const band = (a && a.decision && a.decision.band)
+    ? String(a.decision.band).toLowerCase()
+    : 'gray';
 
-      const dashBand = (band === 'green') ? 'green' : (band === 'yellow') ? 'amber' : 'gray';
+  const total = (a && a.decision && typeof a.decision.n === 'number')
+    ? a.decision.n
+    : 0;
 
-      const drivers = (a && Array.isArray(a.drivers)) ? a.drivers : [];
-      const primary_drivers = drivers.slice(0, 2).map(d => ({
-        name: d.name,
-        band: dashBand,
-        r2: d.r2
-      }));
+  // 🔧 Normalize yellow + amber → amber (to match Predictive + ROI)
+  const dashBand =
+    (band === 'green') ? 'green' :
+    (band === 'yellow' || band === 'amber') ? 'amber' :
+    'gray';
 
-      return {
-        primary_drivers,
-        total_responses: total,
-        fallback_used: false
-      };
-    }
+  const drivers = (a && Array.isArray(a.drivers)) ? a.drivers : [];
+  const primary_drivers = drivers.slice(0, 2).map(d => ({
+    name: d.name,
+    band: dashBand,
+    r2: d.r2
+  }));
+
+  return {
+    primary_drivers,
+    total_responses: total,
+    fallback_used: false
+  };
+}
 
     function clientIdForOrg(org) {
       switch (org) {
